@@ -1,0 +1,71 @@
+name: Sync desktop app
+
+# Pulls the latest macOS .dmg from the PRIVATE tkadauke/syrus releases onto the
+# VM so the public site can serve it (the private repo can't be linked directly).
+# Runs hourly + on demand, on the same self-hosted runner as deploys. Idempotent:
+# it skips the 100 MB+ download when the current asset is already present.
+#
+# Requires repo secret SYRUS_RELEASE_TOKEN = a token with read access to
+# tkadauke/syrus (fine-grained PAT: Contents -> Read-only on that repo).
+
+on:
+  schedule:
+    - cron: "23 * * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: sync-desktop
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: [self-hosted, syrus]
+    timeout-minutes: 15
+    steps:
+      - name: Sync latest .dmg
+        env:
+          TOKEN: ${{ secrets.SYRUS_RELEASE_TOKEN }}
+          SRC_REPO: tkadauke/syrus
+          DEST: ${{ vars.DOWNLOADS_DIR || '/srv/syrus/downloads' }}
+        run: |
+          set -euo pipefail
+          if [ -z "${TOKEN}" ]; then
+            echo "::error::SYRUS_RELEASE_TOKEN is not set — add a PAT with read access to ${SRC_REPO}."
+            exit 1
+          fi
+          command -v jq >/dev/null || { echo "::error::jq is not installed on the runner."; exit 1; }
+          mkdir -p "${DEST}"
+          API="https://api.github.com/repos/${SRC_REPO}"
+
+          rel=$(curl -fsSL -H "Authorization: Bearer ${TOKEN}" -H "Accept: application/vnd.github+json" \
+                -H "X-GitHub-Api-Version: 2022-11-28" "${API}/releases/latest")
+          tag=$(echo "$rel" | jq -r '.tag_name')
+          asset_name=$(echo "$rel" | jq -r '[.assets[] | select(.name | test("arm64\\.dmg$"))][0].name')
+          asset_url=$(echo "$rel"  | jq -r '[.assets[] | select(.name | test("arm64\\.dmg$"))][0].url')
+          if [ -z "$asset_name" ] || [ "$asset_name" = "null" ]; then
+            echo "::error::No arm64 .dmg asset in ${SRC_REPO} ${tag}"; exit 1
+          fi
+          echo "latest release: ${tag} -> ${asset_name}"
+
+          current=$(cat "${DEST}/CURRENT" 2>/dev/null || echo "")
+          if [ "$current" = "$asset_name" ] && [ -f "${DEST}/${asset_name}" ]; then
+            echo "::notice::Already up to date (${asset_name})."
+            exit 0
+          fi
+
+          tmp=$(mktemp -d)
+          echo "downloading ${asset_name} ..."
+          curl -fSL -H "Authorization: Bearer ${TOKEN}" -H "Accept: application/octet-stream" \
+            "$asset_url" -o "${tmp}/${asset_name}"
+
+          sz=$(stat -c%s "${tmp}/${asset_name}")
+          if [ "$sz" -lt 1000000 ]; then
+            echo "::error::downloaded file too small (${sz} bytes)"; head -c 300 "${tmp}/${asset_name}"; exit 1
+          fi
+
+          mv -f "${tmp}/${asset_name}" "${DEST}/${asset_name}"
+          chmod 644 "${DEST}/${asset_name}"
+          echo "${asset_name}" > "${DEST}/CURRENT"
+          find "${DEST}" -maxdepth 1 -name "*.dmg" ! -name "${asset_name}" -delete || true
+          rm -rf "${tmp}"
+          echo "::notice::Synced ${asset_name} (${sz} bytes) to ${DEST}."

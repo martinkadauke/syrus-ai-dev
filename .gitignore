@@ -32,3 +32,6 @@ yarn-error.log*
 # ide
 .vscode/
 .idea/
+
+# synced desktop binaries (served from a VM volume, never committed)
+/public/downloads/

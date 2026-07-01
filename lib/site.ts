@@ -10,9 +10,9 @@ export const site = {
   taglineTranslation: "He gives twice who gives quickly.",
   taglineAttribution: "— Publilius Syrus",
 
-  macDownload:
-    process.env.NEXT_PUBLIC_MAC_DOWNLOAD_URL ||
-    "https://github.com/tkadauke/syrus/releases",
+  // Served from the VM (see app/download/mac + the sync-desktop workflow), not
+  // from the private GitHub repo. Redirects to the current versioned .dmg.
+  macDownload: process.env.NEXT_PUBLIC_MAC_DOWNLOAD_URL || "/download/mac",
   contactEmail: process.env.NEXT_PUBLIC_CONTACT_EMAIL || "hello@syrus-ai.dev",
 
   web3formsKey: process.env.NEXT_PUBLIC_WEB3FORMS_KEY || "",

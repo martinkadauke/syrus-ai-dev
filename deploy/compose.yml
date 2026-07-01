@@ -15,6 +15,10 @@ services:
     ports:
       # Host port -> container. NPM points syrus-ai.dev at this host port.
       - "${PUBLIC_PORT:-8770}:3000"
+    volumes:
+      # Mac .dmg lives here, kept current by the sync-desktop workflow. Mounted
+      # into public/ so Next serves it statically at /downloads/<file>.
+      - "${DOWNLOADS_DIR:-/srv/syrus/downloads}:/app/public/downloads:ro"
     healthcheck:
       test:
         - CMD
