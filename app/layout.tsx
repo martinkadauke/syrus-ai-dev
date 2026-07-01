@@ -23,12 +23,12 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 const description =
-  "Syrus is a self-hosted, multi-user harness that turns GitHub issues, review feedback, CI failures, and scheduled tasks into agent runs — then opens and keeps the pull request current. You keep the keys, the logs, and the audit trail.";
+  "Syrus lets software teams put AI to work across the whole delivery pipeline — proposing epics, writing the code, reviewing the diff — without giving up the git workflow they trust. A developer approves every merge, so only world-class code ships.";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://syrus-ai.dev"),
   title: {
-    default: "Syrus — the agent writes the code, Syrus ships the PR",
+    default: "Syrus — AI writes the code, your developers ship it",
     template: "%s · Syrus",
   },
   description,
@@ -46,12 +46,12 @@ export const metadata: Metadata = {
     type: "website",
     url: "https://syrus-ai.dev",
     siteName: "Syrus",
-    title: "Syrus — the agent writes the code, Syrus ships the PR",
+    title: "Syrus — AI writes the code, your developers ship it",
     description,
   },
   twitter: {
     card: "summary_large_image",
-    title: "Syrus — the agent writes the code, Syrus ships the PR",
+    title: "Syrus — AI writes the code, your developers ship it",
     description,
   },
 };
