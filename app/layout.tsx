@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Instrument_Serif, JetBrains_Mono } from "next/font/google";
+import { CookieNotice } from "../components/cookie-notice";
 import "./globals.css";
 
 const inter = Inter({
@@ -79,6 +80,7 @@ export default function RootLayout({
           }}
         />
         {children}
+        <CookieNotice />
       </body>
     </html>
   );

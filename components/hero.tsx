@@ -9,7 +9,7 @@ import { hero, site } from "../lib/site";
 const ease = [0.22, 1, 0.36, 1] as const;
 
 const chips = [
-  "More built, same team",
+  "More shipped per sprint",
   "Every feature human-approved",
   "Epics & tickets, fully tracked",
 ];

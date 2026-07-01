@@ -7,9 +7,9 @@ import { AppleIcon } from "./icons";
 import { site } from "../lib/site";
 
 const links = [
-  { href: "#how", label: "How it works" },
-  { href: "#features", label: "Why Syrus" },
-  { href: "#entry-points", label: "Triggers" },
+  { href: "/#how", label: "How it works" },
+  { href: "/#features", label: "Why Syrus" },
+  { href: "/#entry-points", label: "Triggers" },
 ];
 
 export function Nav() {
@@ -32,7 +32,7 @@ export function Nav() {
         }`}
       >
         <nav className="wrap flex h-16 items-center justify-between">
-          <a href="#top" aria-label="Syrus home">
+          <a href="/" aria-label="Syrus home">
             <Logo />
           </a>
 
@@ -50,7 +50,7 @@ export function Nav() {
 
           <div className="flex items-center gap-2">
             <span className="hidden sm:inline-flex">
-              <ButtonLink href="#demo" variant="ghost" size="md">
+              <ButtonLink href="/#demo" variant="ghost" size="md">
                 Request a demo
               </ButtonLink>
             </span>

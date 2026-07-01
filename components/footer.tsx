@@ -8,16 +8,16 @@ const cols: { title: string; links: FooterLink[] }[] = [
   {
     title: "Product",
     links: [
-      { label: "How it works", href: "#how" },
-      { label: "Why Syrus", href: "#features" },
-      { label: "Triggers", href: "#entry-points" },
+      { label: "How it works", href: "/#how" },
+      { label: "Why Syrus", href: "/#features" },
+      { label: "Triggers", href: "/#entry-points" },
     ],
   },
   {
     title: "Get started",
     links: [
-      { label: "Download for Mac", href: site.macDownload, external: true },
-      { label: "Request a demo", href: "#demo" },
+      { label: "Download for Mac", href: site.macDownload },
+      { label: "Request a demo", href: "/#demo" },
     ],
   },
 ];
@@ -65,10 +65,16 @@ export function Footer() {
           ))}
         </div>
 
-        <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-white/6 pt-6 sm:flex-row">
-          <p className="text-[0.82rem] text-cream-faint">
-            © {year} Syrus · {site.domain}
-          </p>
+        <div className="mt-12 flex flex-col items-center gap-4 border-t border-white/6 pt-6 sm:flex-row sm:justify-between">
+          <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-[0.82rem] text-cream-faint">
+            <span>© {year} Syrus · {site.domain}</span>
+            <a href="/impressum" className="transition-colors hover:text-cream">
+              Impressum
+            </a>
+            <a href="/privacy" className="transition-colors hover:text-cream">
+              Privacy
+            </a>
+          </div>
           <span className="font-mono text-[0.72rem] text-cream-faint">
             build {shortSha}
           </span>
