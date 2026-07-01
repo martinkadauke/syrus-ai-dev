@@ -64,6 +64,13 @@ jobs:
       cancel-in-progress: false
     env:
       PUBLIC_PORT: ${{ vars.PUBLIC_PORT || '8770' }}
+      # Demo-form email (Strato SMTP). Unset values fall back to compose defaults.
+      SMTP_PASS: ${{ secrets.SMTP_PASS }}
+      DEMO_NOTIFY: ${{ vars.DEMO_NOTIFY }}
+      SMTP_HOST: ${{ vars.SMTP_HOST }}
+      SMTP_PORT: ${{ vars.SMTP_PORT }}
+      SMTP_USER: ${{ vars.SMTP_USER }}
+      SMTP_FROM: ${{ vars.SMTP_FROM }}
     steps:
       - uses: actions/checkout@v4
 

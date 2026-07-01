@@ -12,6 +12,16 @@ services:
       NODE_ENV: production
       PORT: "3000"
       HOSTNAME: "0.0.0.0"
+      # Demo-form email via Strato SMTP. Only SMTP_PASS (GitHub secret) and
+      # DEMO_NOTIFY (GitHub variable, comma-separated recipients) are required;
+      # the rest default to the contact@ mailbox. Until set, the form falls back
+      # to a mailto so nothing breaks.
+      SMTP_HOST: "${SMTP_HOST:-smtp.strato.de}"
+      SMTP_PORT: "${SMTP_PORT:-465}"
+      SMTP_USER: "${SMTP_USER:-contact@syrus-ai.dev}"
+      SMTP_FROM: "${SMTP_FROM:-Syrus <contact@syrus-ai.dev>}"
+      SMTP_PASS: "${SMTP_PASS:-}"
+      DEMO_NOTIFY: "${DEMO_NOTIFY:-}"
     ports:
       # Host port -> container. NPM points syrus-ai.dev at this host port.
       - "${PUBLIC_PORT:-8770}:3000"

@@ -29,44 +29,36 @@ export function Demo() {
     const company = String(data.get("company") || "");
     const message = String(data.get("message") || "");
 
-    // No form backend configured yet → fall back to a prefilled email.
-    if (!site.web3formsKey) {
-      const body = encodeURIComponent(
+    const mailtoFallback = () => {
+      const b = encodeURIComponent(
         `Name: ${name}\nCompany: ${company}\nEmail: ${email}\n\n${message}`,
       );
       window.location.href = `mailto:${site.contactEmail}?subject=${encodeURIComponent(
         "Syrus demo request",
-      )}&body=${body}`;
+      )}&body=${b}`;
       setStatus("mailto");
-      return;
-    }
+    };
 
     setStatus("loading");
     setError("");
     try {
-      const res = await fetch("https://api.web3forms.com/submit", {
+      const res = await fetch("/api/demo", {
         method: "POST",
-        headers: { "Content-Type": "application/json", Accept: "application/json" },
-        body: JSON.stringify({
-          access_key: site.web3formsKey,
-          subject: "New Syrus demo request",
-          from_name: "syrus-ai.dev",
-          name,
-          email,
-          company,
-          message,
-        }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, company, message }),
       });
-      const json = await res.json();
-      if (json.success) {
+      const json = await res.json().catch(() => ({}));
+      if (res.ok && json.success) {
         setStatus("success");
-      } else {
+      } else if (res.status === 422) {
         setStatus("error");
-        setError(json.message || "Something went wrong. Please try again.");
+        setError(json.error || "Please check your details and try again.");
+      } else {
+        // Not configured (503) or a send failure (502) → prefilled email.
+        mailtoFallback();
       }
     } catch {
-      setStatus("error");
-      setError("Network error. Please try again or email us directly.");
+      mailtoFallback();
     }
   }
 

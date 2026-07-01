@@ -22,8 +22,9 @@ Copy `.env.example` to `.env.local` and fill in the values you want to override
 Everything tweakable lives in [`lib/site.ts`](lib/site.ts) or in `NEXT_PUBLIC_*`
 env vars (see [`.env.example`](.env.example)):
 
-- **Demo form** — get a free key at [web3forms.com](https://web3forms.com) and set
-  `NEXT_PUBLIC_WEB3FORMS_KEY`. Without it, the form falls back to a mailto.
+- **Demo form** — posts to `/api/demo`, which emails your team + a confirmation to
+  the sender via Strato SMTP. Set `SMTP_PASS` (secret) + `DEMO_NOTIFY` (recipients);
+  see `.env.example`. Without them, the form falls back to a mailto.
 - **Mac download** — `NEXT_PUBLIC_MAC_DOWNLOAD_URL` (defaults to Syrus releases).
 - **Big screenshot** — drop your image at `public/product-screenshot.png`; it
   replaces the hero placeholder on the next build/redeploy (the check runs at
