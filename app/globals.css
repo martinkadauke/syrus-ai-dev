@@ -72,6 +72,9 @@ html[data-theme="cool"] {
 html {
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
+  /* Belt-and-suspenders against horizontal scroll: body overflow-x:hidden alone
+     doesn't stop the root from scrolling when a descendant overflows. */
+  overflow-x: hidden;
 }
 
 body {

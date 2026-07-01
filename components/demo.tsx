@@ -71,7 +71,7 @@ export function Demo() {
   }
 
   return (
-    <section id="demo" className="relative py-24 sm:py-32">
+    <section id="demo" className="relative overflow-hidden py-24 sm:py-32">
       {/* warm glow behind the band */}
       <div aria-hidden className="pointer-events-none absolute inset-0 -z-0">
         <div

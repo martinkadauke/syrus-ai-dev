@@ -25,10 +25,10 @@ export const site = {
 
 export const hero = {
   eyebrow: "Built for product & project owners",
-  titleLead: "Do more with the team you have.",
+  titleLead: "Ship more of your roadmap.",
   titleAccent: "Without losing sight of a thing.",
   subtitle:
-    "Syrus lets product, project, and application owners put AI to work across delivery — turning your goals into tracked epics and tickets, letting AI do the heavy lifting, and keeping a developer's review on every change. More gets built with the same team, you see exactly what's shipping, and the guardrails keep AI's speed from becoming AI's mess.",
+    "Syrus lets product, project, and application owners put AI to work across delivery — turning your goals into tracked epics and tickets, letting AI do the heavy lifting, and keeping a developer's review on every change. You ship more each sprint, you see exactly what's being built, and the guardrails keep AI's speed from becoming AI's mess.",
 } as const;
 
 // The human + AI team workflow — who does what, start to finish.
@@ -75,8 +75,8 @@ export const workflowSteps = [
 export const features = [
   {
     id: "leverage",
-    title: "Do more with the team you have",
-    body: "Turn your roadmap into work AI can execute end to end. Your people shift from typing code to directing and reviewing it — so a small team ships like a much bigger one, without burning out or hiring up.",
+    title: "Multiply your output",
+    body: "Turn your roadmap into work AI can execute end to end. Your people move from typing code to directing and reviewing it — so you ship more each sprint, without burning out or hiring up.",
   },
   {
     id: "approve",
@@ -130,7 +130,7 @@ export const entryPoints = [
 ] as const;
 
 export const infraPoints = [
-  "More shipped with the team you already have",
+  "More shipped in every sprint, no new hires",
   "A developer reviews and approves every change",
   "Goals tracked as epics and tickets, end to end",
   "Self-hosted — your keys, your data, your git workflow",
