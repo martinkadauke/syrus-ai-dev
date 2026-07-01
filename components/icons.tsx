@@ -89,7 +89,7 @@ export function FeatureIcon({ id, ...props }: IconProps & { id: string }) {
           <path d="m9 11.5 2 2 4-4" />
         </svg>
       );
-    case "leverage": // the team you have
+    case "leverage": // more output
       return (
         <svg viewBox="0 0 24 24" aria-hidden {...base} {...props}>
           <circle cx="9" cy="8" r="3" />
