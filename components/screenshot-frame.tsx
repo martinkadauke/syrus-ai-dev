@@ -120,8 +120,8 @@ function BrowserFrame({ src }: { src: string | null }) {
         <img
           src={src}
           alt="The Syrus dashboard turning GitHub issues into pull requests."
-          width={1024}
-          height={630}
+          width={956}
+          height={528}
           className="block h-auto w-full"
         />
       ) : (
