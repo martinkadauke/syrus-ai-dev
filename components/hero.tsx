@@ -45,21 +45,21 @@ export function Hero({
           className="aurora animate-float-slow left-1/2 top-[-10%] h-[520px] w-[720px] -translate-x-1/2"
           style={{
             background:
-              "radial-gradient(closest-side, rgba(201,111,74,0.55), transparent)",
+              "radial-gradient(closest-side, var(--aurora-a), transparent)",
           }}
         />
         <div
           className="aurora left-[8%] top-[30%] h-[360px] w-[360px]"
           style={{
             background:
-              "radial-gradient(closest-side, rgba(226,138,92,0.28), transparent)",
+              "radial-gradient(closest-side, var(--aurora-b), transparent)",
           }}
         />
         <div
           className="aurora right-[6%] top-[8%] h-[320px] w-[320px]"
           style={{
             background:
-              "radial-gradient(closest-side, rgba(166,84,47,0.3), transparent)",
+              "radial-gradient(closest-side, var(--aurora-c), transparent)",
           }}
         />
       </div>

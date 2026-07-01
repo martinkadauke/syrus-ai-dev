@@ -78,7 +78,7 @@ export function Demo() {
           className="aurora left-1/2 top-1/2 h-[420px] w-[820px] -translate-x-1/2 -translate-y-1/2 opacity-40"
           style={{
             background:
-              "radial-gradient(closest-side, rgba(201,111,74,0.4), transparent)",
+              "radial-gradient(closest-side, var(--aurora-a), transparent)",
           }}
         />
       </div>
@@ -126,7 +126,7 @@ export function Demo() {
             <div className="p-8 sm:p-11">
               {status === "success" ? (
                 <div className="flex h-full min-h-[320px] flex-col items-center justify-center text-center">
-                  <span className="flex size-14 items-center justify-center rounded-full clay-gradient text-[#231208]">
+                  <span className="flex size-14 items-center justify-center rounded-full clay-gradient text-on-accent">
                     <CheckIcon className="size-7" />
                   </span>
                   <h3 className="mt-5 text-xl font-semibold text-cream">
@@ -205,7 +205,7 @@ export function Demo() {
                   </label>
 
                   {status === "error" && (
-                    <p className="text-[0.85rem] text-[#e28a5c]">{error}</p>
+                    <p className="text-[0.85rem] text-[#f0806a]">{error}</p>
                   )}
                   {status === "mailto" && (
                     <p className="text-[0.85rem] text-cream-dim">
@@ -223,7 +223,7 @@ export function Demo() {
                   <button
                     type="submit"
                     disabled={status === "loading"}
-                    className="group mt-1 inline-flex h-12 items-center justify-center gap-2.5 rounded-full clay-gradient px-5 text-[0.95rem] font-semibold text-[#231208] transition-all duration-200 hover:-translate-y-0.5 hover:brightness-[1.06] disabled:cursor-not-allowed disabled:opacity-70"
+                    className="group mt-1 inline-flex h-12 items-center justify-center gap-2.5 rounded-full clay-gradient px-5 text-[0.95rem] font-semibold text-on-accent transition-all duration-200 hover:-translate-y-0.5 hover:brightness-[1.06] disabled:cursor-not-allowed disabled:opacity-70"
                   >
                     {status === "loading" ? "Sending…" : "Request a demo"}
                     {status !== "loading" && (

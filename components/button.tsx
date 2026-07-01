@@ -10,7 +10,7 @@ const sizes: Record<Size, string> = {
 
 const variants: Record<Variant, string> = {
   primary:
-    "clay-gradient text-[#231208] font-semibold shadow-[0_1px_0_rgba(255,255,255,0.25)_inset,0_10px_30px_-12px_rgba(201,111,74,0.7)] hover:brightness-[1.06] hover:-translate-y-0.5",
+    "clay-gradient text-on-accent font-semibold shadow-[0_1px_0_rgba(255,255,255,0.25)_inset,0_10px_30px_-12px_var(--accent-shadow)] hover:brightness-[1.06] hover:-translate-y-0.5",
   secondary:
     "hairline bg-[color-mix(in_oklab,var(--color-cream)_5%,transparent)] text-cream font-medium hover:bg-[color-mix(in_oklab,var(--color-cream)_10%,transparent)] hover:-translate-y-0.5",
   ghost:

@@ -1,4 +1,5 @@
 import { Logo } from "./logo";
+import { ThemeToggle } from "./theme-toggle";
 import { site } from "../lib/site";
 
 type FooterLink = { label: string; href: string; external?: boolean };
@@ -71,6 +72,10 @@ export function Footer() {
           <span className="font-mono text-[0.72rem] text-cream-faint">
             build {shortSha}
           </span>
+        </div>
+
+        <div className="mt-8 flex justify-center">
+          <ThemeToggle />
         </div>
       </div>
     </footer>

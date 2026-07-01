@@ -13,7 +13,7 @@ const roleMeta: Record<
   },
   ai: {
     label: "Syrus AI",
-    node: "clay-gradient text-[#231208]",
+    node: "clay-gradient text-on-accent",
     dot: "clay-gradient",
   },
   both: {

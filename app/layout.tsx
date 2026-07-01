@@ -67,9 +67,19 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      data-theme="cool"
+      suppressHydrationWarning
       className={`${inter.variable} ${instrumentSerif.variable} ${jetbrainsMono.variable}`}
     >
-      <body>{children}</body>
+      <body>
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "try{var t=localStorage.getItem('syrus-theme');if(t)document.documentElement.dataset.theme=t;}catch(e){}",
+          }}
+        />
+        {children}
+      </body>
     </html>
   );
 }
