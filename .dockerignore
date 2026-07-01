@@ -1,0 +1,15 @@
+.git
+.github
+node_modules
+.next
+out
+_brandtmp
+npm-debug.log*
+.env
+.env*.local
+README.md
+deploy/README.md
+.vscode
+.idea
+Dockerfile
+.dockerignore

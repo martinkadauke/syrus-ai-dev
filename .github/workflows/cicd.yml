@@ -1,0 +1,127 @@
+name: CI/CD
+
+# Single-environment pipeline (main only). Mirrors the martinkadauke/vorratsdatenspeicher
+# pattern: build the image on a GitHub-hosted runner and push to GHCR, then deploy
+# from a self-hosted runner living on the Unraid VM (192.168.1.42, label "syrus").
+#
+# The deploy job is gated behind the DEPLOY_ENABLED repo variable so the build
+# stays green before the VM/runner exist. Once the runner is registered, set the
+# repo variable DEPLOY_ENABLED=true (Settings -> Secrets and variables -> Actions
+# -> Variables) and the next push will deploy.
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - "**.md"
+      - ".gitignore"
+      - ".gitattributes"
+      - "deploy/README.md"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    # Cancel a superseded BUILD on rapid pushes — but never a deploy (below).
+    concurrency:
+      group: build-${{ github.ref }}
+      cancel-in-progress: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository }}:latest
+            ghcr.io/${{ github.repository }}:${{ github.sha }}
+          build-args: |
+            GIT_SHA=${{ github.sha }}
+            GIT_REF=${{ github.ref_name }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  deploy:
+    needs: build
+    if: ${{ vars.DEPLOY_ENABLED == 'true' }}
+    runs-on: [self-hosted, syrus]
+    timeout-minutes: 15
+    # Serialize deploys; never cancel one in flight.
+    concurrency:
+      group: deploy-syrus
+      cancel-in-progress: false
+    env:
+      PUBLIC_PORT: ${{ vars.PUBLIC_PORT || '8770' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Login to GHCR
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Record the currently-running SHA (for rollback)
+        id: prev
+        run: |
+          PREV=$(curl -fsS "http://127.0.0.1:${PUBLIC_PORT}/api/version" 2>/dev/null \
+            | sed -n 's/.*"sha":"\([^"]*\)".*/\1/p' || true)
+          echo "prev=${PREV}" >> "$GITHUB_OUTPUT"
+          echo "currently running: ${PREV:-<none>}"
+
+      - name: Pull and start (waits for healthy, bounded)
+        env:
+          IMAGE: ghcr.io/${{ github.repository }}:${{ github.sha }}
+        run: |
+          docker compose -f deploy/compose.yml pull
+          docker compose -f deploy/compose.yml up -d --wait --wait-timeout 120 --remove-orphans
+
+      - name: Verify the running container reports the deployed SHA
+        # Encodes the hard-won VDS lesson: a green build does NOT mean the new
+        # code is live. We poll /api/version and require it to equal this commit.
+        env:
+          EXPECTED: ${{ github.sha }}
+        run: |
+          set -u
+          for i in $(seq 1 20); do
+            RUNNING=$(curl -fsS "http://127.0.0.1:${PUBLIC_PORT}/api/version" 2>/dev/null \
+              | sed -n 's/.*"sha":"\([^"]*\)".*/\1/p' || true)
+            echo "attempt ${i}: running=${RUNNING:-<none>} expected=${EXPECTED}"
+            if [ "${RUNNING}" = "${EXPECTED}" ]; then
+              echo "::notice::Deployed SHA verified — ${EXPECTED} is live."
+              exit 0
+            fi
+            sleep 3
+          done
+          echo "::error::The new container never reported ${EXPECTED} — it likely crashed on boot. Rolling back to the previous image."
+          docker compose -f deploy/compose.yml ps
+          docker compose -f deploy/compose.yml logs --tail=120 web || true
+          exit 1
+
+      - name: Roll back to the previous image on failure
+        if: failure()
+        env:
+          PREV: ${{ steps.prev.outputs.prev }}
+          EXPECTED: ${{ github.sha }}
+        run: |
+          if [ -n "${PREV}" ] && [ "${PREV}" != "${EXPECTED}" ]; then
+            echo "::warning::Restoring the site to the last good image ${PREV}."
+            IMAGE="ghcr.io/${{ github.repository }}:${PREV}" \
+              docker compose -f deploy/compose.yml up -d --wait --wait-timeout 120 --remove-orphans \
+              || echo "::error::Rollback also failed — the site may be down. Manual intervention needed."
+          else
+            echo "::warning::No previous good SHA to roll back to (first deploy) — the site may be down."
+          fi
+
+      - name: Prune dangling images
+        if: always()
+        run: docker image prune -f || true

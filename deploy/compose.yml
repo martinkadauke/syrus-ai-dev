@@ -1,0 +1,32 @@
+# Single-service compose stack, deployed by .github/workflows/cicd.yml from the
+# self-hosted runner on the Unraid VM. TLS + routing for syrus-ai.dev is handled
+# externally by Nginx Proxy Manager, which proxies to http://<vm-ip>:${PUBLIC_PORT}.
+#
+# The image already bakes GIT_SHA / GIT_REF as env (from the Docker build args),
+# so /api/version reflects exactly which commit is running — no override here.
+services:
+  web:
+    image: ${IMAGE:-ghcr.io/martinkadauke/syrus-ai-dev:latest}
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: "3000"
+      HOSTNAME: "0.0.0.0"
+    ports:
+      # Host port -> container. NPM points syrus-ai.dev at this host port.
+      - "${PUBLIC_PORT:-8770}:3000"
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - "require('http').get('http://127.0.0.1:3000/api/health',r=>process.exit(r.statusCode===200?0:1)).on('error',()=>process.exit(1))"
+      interval: 15s
+      timeout: 5s
+      retries: 4
+      start_period: 20s
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
