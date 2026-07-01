@@ -112,35 +112,23 @@ function Placeholder() {
 }
 
 function BrowserFrame({ src }: { src: string | null }) {
+  // Bare screenshot — no window chrome, no bezel. Just rounded corners + shadow.
   return (
-    <div className="relative rounded-2xl bg-gradient-to-b from-white/10 to-white/[0.02] p-[1.5px] shadow-[0_40px_120px_-30px_rgba(0,0,0,0.8)]">
-      <div className="overflow-hidden rounded-[calc(1rem-1px)] border border-white/8 bg-ink-soft">
-        <div className="flex items-center gap-2 border-b border-white/6 bg-white/[0.02] px-4 py-2.5">
-          <span className="flex gap-1.5">
-            <span className="size-3 rounded-full bg-[#e06b52]/80" />
-            <span className="size-3 rounded-full bg-[#e0a54a]/80" />
-            <span className="size-3 rounded-full bg-[#84c78d]/80" />
-          </span>
-          <div className="mx-auto flex items-center gap-1.5 rounded-md bg-white/5 px-3 py-1 font-mono text-[0.68rem] text-cream-faint">
-            <span className="size-1.5 rounded-full bg-[#84c78d]" />
-            app.syrus-ai.dev
-          </div>
-        </div>
+    <div className="overflow-hidden rounded-2xl shadow-[0_40px_120px_-30px_rgba(0,0,0,0.85)]">
+      {src ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={src}
+          alt="The Syrus dashboard turning GitHub issues into pull requests."
+          width={1024}
+          height={630}
+          className="block h-auto w-full"
+        />
+      ) : (
         <div className="aspect-[16/10] w-full">
-          {src ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={src}
-              alt="The Syrus dashboard turning GitHub issues into pull requests."
-              width={1024}
-              height={630}
-              className="h-full w-full object-cover object-top"
-            />
-          ) : (
-            <Placeholder />
-          )}
+          <Placeholder />
         </div>
-      </div>
+      )}
     </div>
   );
 }
