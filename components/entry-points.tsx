@@ -9,8 +9,8 @@ export function EntryPoints() {
       <div className="wrap">
         <SectionHeader
           eyebrow="Six ways in, one execution model"
-          title="However work starts, the pipeline is the same."
-          subtitle="Issues, review comments, red checks, operator prompts, cron, and rebases all become the same Job, Workflow, Step, and Run records — with the same audit trail."
+          title="However work starts, it's tracked the same way."
+          subtitle="A ticket, a review comment, a failing check, a scheduled chore — each becomes the same tracked epic and ticket with a full history, so nothing happens off the books."
         />
 
         <RevealGroup

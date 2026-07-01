@@ -9,8 +9,8 @@ export function Features() {
       <div className="wrap">
         <SectionHeader
           eyebrow="Why Syrus"
-          title="AI in your pipeline — without giving up control."
-          subtitle="Syrus is built for teams that trust their git process. The AI does the heavy lifting; your developers keep the wheel."
+          title="Leverage AI — with the control an owner needs."
+          subtitle="More output, real guardrails, and full visibility into what's being built — so you can move faster without gambling on quality."
         />
 
         <RevealGroup className="mt-14 grid gap-4 sm:grid-cols-2" stagger={0.1}>

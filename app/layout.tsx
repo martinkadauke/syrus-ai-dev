@@ -23,12 +23,12 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 const description =
-  "Syrus lets software teams put AI to work across the whole delivery pipeline — proposing epics, writing the code, reviewing the diff — without giving up the git workflow they trust. A developer approves every merge, so only world-class code ships.";
+  "Syrus lets product, project, and application owners put AI to work across delivery — goals become tracked epics and tickets, AI does the heavy lifting, and a developer reviews every change. More gets built with the same team, with full visibility and no loss of control.";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://syrus-ai.dev"),
   title: {
-    default: "Syrus — AI writes the code, your developers ship it",
+    default: "Syrus — do more with the team you have, fully in control",
     template: "%s · Syrus",
   },
   description,
@@ -46,12 +46,12 @@ export const metadata: Metadata = {
     type: "website",
     url: "https://syrus-ai.dev",
     siteName: "Syrus",
-    title: "Syrus — AI writes the code, your developers ship it",
+    title: "Syrus — do more with the team you have, fully in control",
     description,
   },
   twitter: {
     card: "summary_large_image",
-    title: "Syrus — AI writes the code, your developers ship it",
+    title: "Syrus — do more with the team you have, fully in control",
     description,
   },
 };

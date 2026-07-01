@@ -90,12 +90,12 @@ export function Demo() {
             <div className="border-b border-white/8 p-8 sm:p-11 lg:border-b-0 lg:border-r">
               <h2 className="text-balance text-3xl font-semibold leading-[1.08] tracking-[-0.02em] text-cream sm:text-4xl">
                 See Syrus running on{" "}
-                <span className="clay-text">your repositories.</span>
+                <span className="clay-text">your roadmap.</span>
               </h2>
               <p className="mt-4 text-[1rem] leading-relaxed text-cream-dim">
                 Download the Mac app to drive Syrus from your desktop, or request
-                a guided demo and we&apos;ll walk your team through the issue-to-PR
-                loop end to end.
+                a guided demo — we&apos;ll show you how goals become tracked
+                tickets, AI-written code, and reviewed pull requests, end to end.
               </p>
 
               <div className="mt-7 flex flex-col gap-3 sm:flex-row">

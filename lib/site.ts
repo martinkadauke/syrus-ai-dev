@@ -24,11 +24,11 @@ export const site = {
 } as const;
 
 export const hero = {
-  eyebrow: "Built for software teams",
-  titleLead: "AI writes the code.",
-  titleAccent: "Your developers ship it.",
+  eyebrow: "Built for product & project owners",
+  titleLead: "Do more with the team you have.",
+  titleAccent: "Without losing sight of a thing.",
   subtitle:
-    "Syrus lets your team put AI to work across the whole delivery pipeline — proposing epics, writing the code, reviewing the diff — without giving up the issues, pull requests, and branch protection you already trust. Leads set the direction, a developer approves every merge, and only world-class code ships.",
+    "Syrus lets product, project, and application owners put AI to work across delivery — turning your goals into tracked epics and tickets, letting AI do the heavy lifting, and keeping a developer's review on every change. More gets built with the same team, you see exactly what's shipping, and the guardrails keep AI's speed from becoming AI's mess.",
 } as const;
 
 // The human + AI team workflow — who does what, start to finish.
@@ -71,27 +71,27 @@ export const workflowSteps = [
   },
 ] as const;
 
-// The product pillars.
+// The product pillars — framed for the owner who wants leverage with control.
 export const features = [
   {
-    id: "github",
-    title: "Keep the git workflow you trust",
-    body: "Issues, pull requests, reviews, checks, and branch protection keep working exactly as they do today. Syrus puts AI inside the loop your team already runs — no separate dashboard to migrate into, no process to relearn.",
+    id: "leverage",
+    title: "Do more with the team you have",
+    body: "Turn your roadmap into work AI can execute end to end. Your people shift from typing code to directing and reviewing it — so a small team ships like a much bigger one, without burning out or hiring up.",
   },
   {
     id: "approve",
-    title: "A human approves every merge",
-    body: "AI proposes the plan, writes the code, and critiques its own diff — but nothing lands without a developer's review and sign-off. You decide what's world-class; Syrus never bypasses your branch protection.",
+    title: "AI speed, without the AI mess",
+    body: "Every change runs through your real code review and branch protection. Nothing merges until a developer signs off — so AI's velocity never turns into hallucinated logic or low-quality features slipping into production.",
+  },
+  {
+    id: "visibility",
+    title: "See exactly what's being built",
+    body: "Goals become tracked epics and tickets, and every run keeps its plan, diff, and review. You can follow what development is doing — and understand what each new feature actually is — without reading a line of code.",
   },
   {
     id: "keys",
-    title: "Own the keys",
-    body: "Bring your own GitHub and model credentials, encrypted at rest. The database, logs, transcripts, and clone caches all live inside your own infrastructure — a small, legible trust boundary.",
-  },
-  {
-    id: "audit",
-    title: "Keep a full audit trail",
-    body: "Every epic, ticket, run, diff, transcript, and review is durable and attributable. Follow-ups, retries, and rebases append to the same thread — so you can always answer who, what, and why.",
+    title: "Stay in control, on your terms",
+    body: "Self-hosted, your keys, your existing git workflow. Nothing leaves your infrastructure and there's no new dashboard to migrate into — Syrus fits the process your team already trusts.",
   },
 ] as const;
 
@@ -130,8 +130,8 @@ export const entryPoints = [
 ] as const;
 
 export const infraPoints = [
-  "Self-host with Docker Compose or Kubernetes",
-  "Bring your own keys — GitHub and the model of your choice",
-  "A developer reviews and approves every pull request",
-  "Full transcript, diff, and audit trail for every run",
+  "More shipped with the team you already have",
+  "A developer reviews and approves every change",
+  "Goals tracked as epics and tickets, end to end",
+  "Self-hosted — your keys, your data, your git workflow",
 ] as const;

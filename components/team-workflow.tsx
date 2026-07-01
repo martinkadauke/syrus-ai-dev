@@ -31,8 +31,8 @@ export function TeamWorkflow() {
       <div className="wrap">
         <SectionHeader
           eyebrow="How your team works with Syrus"
-          title="You set the direction. AI does the work. Your developers ship."
-          subtitle="Put AI to work across the whole delivery pipeline without giving up the issues, pull requests, reviews, and branch protection your team already trusts."
+          title="You steer it. AI builds it. Your team ships it."
+          subtitle="Every goal turns into tracked epics and tickets, so you always see what's in progress, what's in review, and what shipped — and a developer signs off before anything merges."
         />
 
         {/* legend */}

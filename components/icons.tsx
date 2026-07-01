@@ -89,6 +89,21 @@ export function FeatureIcon({ id, ...props }: IconProps & { id: string }) {
           <path d="m9 11.5 2 2 4-4" />
         </svg>
       );
+    case "leverage": // the team you have
+      return (
+        <svg viewBox="0 0 24 24" aria-hidden {...base} {...props}>
+          <circle cx="9" cy="8" r="3" />
+          <path d="M3.5 19a5.5 5.5 0 0 1 11 0" />
+          <path d="M16 5.5a3 3 0 0 1 0 5.8M20.5 19a5.5 5.5 0 0 0-4.2-5.3" />
+        </svg>
+      );
+    case "visibility": // see what's being built
+      return (
+        <svg viewBox="0 0 24 24" aria-hidden {...base} {...props}>
+          <path d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12Z" />
+          <circle cx="12" cy="12" r="2.6" />
+        </svg>
+      );
     default:
       return null;
   }
