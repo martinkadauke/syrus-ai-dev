@@ -1,7 +1,9 @@
-/* The product shot. `hasImage` is decided on the server (see app/page.tsx) by
-   checking whether public/product-screenshot.png exists — deterministic, with no
-   hydration race. Until a real screenshot is dropped in, we render a convincing
-   mock of the Syrus Jobs dashboard so the hero never looks empty. */
+/* The product shot. `desktopSrc` / `mobileSrc` are resolved on the server (see
+   app/page.tsx) by checking which public/product-screenshot* files exist —
+   deterministic, no hydration race. Art-directed: a browser-chrome frame with
+   the wide shot on >= sm, a phone frame with the tall shot on mobile. If no
+   image is present, a convincing mock of the Syrus Jobs dashboard is shown so
+   the hero never looks empty. */
 
 const jobs = [
   {
@@ -109,11 +111,10 @@ function Placeholder() {
   );
 }
 
-export function ScreenshotFrame({ hasImage = false }: { hasImage?: boolean }) {
+function BrowserFrame({ src }: { src: string | null }) {
   return (
     <div className="relative rounded-2xl bg-gradient-to-b from-white/10 to-white/[0.02] p-[1.5px] shadow-[0_40px_120px_-30px_rgba(0,0,0,0.8)]">
       <div className="overflow-hidden rounded-[calc(1rem-1px)] border border-white/8 bg-ink-soft">
-        {/* window chrome */}
         <div className="flex items-center gap-2 border-b border-white/6 bg-white/[0.02] px-4 py-2.5">
           <span className="flex gap-1.5">
             <span className="size-3 rounded-full bg-[#e06b52]/80" />
@@ -125,13 +126,14 @@ export function ScreenshotFrame({ hasImage = false }: { hasImage?: boolean }) {
             app.syrus-ai.dev
           </div>
         </div>
-
         <div className="aspect-[16/10] w-full">
-          {hasImage ? (
+          {src ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
-              src="/product-screenshot.png"
-              alt="The Syrus dashboard showing a list of automated jobs turning GitHub issues into pull requests."
+              src={src}
+              alt="The Syrus dashboard turning GitHub issues into pull requests."
+              width={1024}
+              height={630}
               className="h-full w-full object-cover object-top"
             />
           ) : (
@@ -140,5 +142,48 @@ export function ScreenshotFrame({ hasImage = false }: { hasImage?: boolean }) {
         </div>
       </div>
     </div>
+  );
+}
+
+function PhoneFrame({ src }: { src: string }) {
+  return (
+    <div className="mx-auto w-full max-w-[268px]">
+      <div className="relative rounded-[2.4rem] bg-gradient-to-b from-white/12 to-white/[0.03] p-[2px] shadow-[0_30px_90px_-30px_rgba(0,0,0,0.85)]">
+        <div className="rounded-[2.3rem] border border-white/10 bg-ink-soft p-1.5">
+          <div className="relative overflow-hidden rounded-[1.9rem]">
+            <span className="absolute left-1/2 top-2 z-10 h-1.5 w-16 -translate-x-1/2 rounded-full bg-black/45" />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={src}
+              alt="The Syrus app on mobile."
+              width={471}
+              height={1024}
+              className="block aspect-[471/1024] w-full object-cover object-top"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export function ScreenshotFrame({
+  desktopSrc = null,
+  mobileSrc = null,
+}: {
+  desktopSrc?: string | null;
+  mobileSrc?: string | null;
+}) {
+  return (
+    <>
+      <div className={mobileSrc ? "hidden sm:block" : "block"}>
+        <BrowserFrame src={desktopSrc} />
+      </div>
+      {mobileSrc && (
+        <div className="sm:hidden">
+          <PhoneFrame src={mobileSrc} />
+        </div>
+      )}
+    </>
   );
 }

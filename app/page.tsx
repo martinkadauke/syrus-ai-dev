@@ -8,19 +8,26 @@ import { EntryPoints } from "../components/entry-points";
 import { Demo } from "../components/demo";
 import { Footer } from "../components/footer";
 
-// Decide on the server whether a real product screenshot has been added, so the
-// hero renders the image or the built-in mock deterministically (no client race).
-// Drop your image at public/product-screenshot.png and redeploy to swap it in.
-const hasShot = fs.existsSync(
-  path.join(process.cwd(), "public", "product-screenshot.png"),
-);
+// Resolve product screenshots on the server so the hero renders the real image
+// (or the built-in mock) deterministically — no client hydration race. Drop
+// public/product-screenshot.<ext> (and optionally -mobile) and redeploy.
+function publicAsset(base: string): string | null {
+  for (const ext of ["png", "jpg", "jpeg", "webp", "avif"]) {
+    if (fs.existsSync(path.join(process.cwd(), "public", `${base}.${ext}`))) {
+      return `/${base}.${ext}`;
+    }
+  }
+  return null;
+}
+const desktopSrc = publicAsset("product-screenshot");
+const mobileSrc = publicAsset("product-screenshot-mobile");
 
 export default function Home() {
   return (
     <>
       <Nav />
       <main>
-        <Hero hasShot={hasShot} />
+        <Hero desktopSrc={desktopSrc} mobileSrc={mobileSrc} />
         <TeamWorkflow />
         <Features />
         <EntryPoints />

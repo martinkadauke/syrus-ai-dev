@@ -14,7 +14,13 @@ const chips = [
   "Self-hosted · your keys",
 ];
 
-export function Hero({ hasShot = false }: { hasShot?: boolean }) {
+export function Hero({
+  desktopSrc = null,
+  mobileSrc = null,
+}: {
+  desktopSrc?: string | null;
+  mobileSrc?: string | null;
+}) {
   const reduce = useReducedMotion();
 
   const container = {
@@ -134,7 +140,7 @@ export function Hero({ hasShot = false }: { hasShot?: boolean }) {
           transition={{ duration: 0.9, delay: 0.4, ease }}
           className="mx-auto mt-16 max-w-5xl"
         >
-          <ScreenshotFrame hasImage={hasShot} />
+          <ScreenshotFrame desktopSrc={desktopSrc} mobileSrc={mobileSrc} />
           <p className="mt-3 text-center font-serif text-[0.95rem] italic text-cream-faint">
             {site.tagline}{" "}
             <span className="not-italic text-cream-faint/70">
