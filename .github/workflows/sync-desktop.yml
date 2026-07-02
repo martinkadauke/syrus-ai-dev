@@ -6,7 +6,10 @@ name: Sync desktop app
 # it skips the 100 MB+ download when the current asset is already present.
 #
 # Requires repo secret SYRUS_RELEASE_TOKEN = a token with read access to
-# tkadauke/syrus (fine-grained PAT: Contents -> Read-only on that repo).
+# tkadauke/syrus (classic PAT with `repo` scope, since fine-grained PATs can't
+# target another user's personal repo). Until the secret exists, the sync step
+# SKIPS cleanly (green run, no hourly failure notifications) — it starts working
+# automatically the moment the secret is added.
 
 on:
   schedule:
@@ -21,18 +24,20 @@ jobs:
   sync:
     runs-on: [self-hosted, syrus]
     timeout-minutes: 15
+    env:
+      TOKEN: ${{ secrets.SYRUS_RELEASE_TOKEN }}
     steps:
+      - name: Note when the token is missing
+        if: ${{ env.TOKEN == '' }}
+        run: echo "::notice::SYRUS_RELEASE_TOKEN is not set — skipping the sync. Add the secret to enable hourly auto-updates."
+
       - name: Sync latest .dmg
+        if: ${{ env.TOKEN != '' }}
         env:
-          TOKEN: ${{ secrets.SYRUS_RELEASE_TOKEN }}
           SRC_REPO: tkadauke/syrus
           DEST: ${{ vars.DOWNLOADS_DIR || '/srv/syrus/downloads' }}
         run: |
           set -euo pipefail
-          if [ -z "${TOKEN}" ]; then
-            echo "::error::SYRUS_RELEASE_TOKEN is not set — add a PAT with read access to ${SRC_REPO}."
-            exit 1
-          fi
           command -v jq >/dev/null || { echo "::error::jq is not installed on the runner."; exit 1; }
           mkdir -p "${DEST}"
           API="https://api.github.com/repos/${SRC_REPO}"
