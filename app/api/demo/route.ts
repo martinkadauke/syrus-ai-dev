@@ -1,4 +1,5 @@
 import nodemailer from "nodemailer";
+import { customerEmail, teamEmail } from "../../../lib/email-templates";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -28,32 +29,50 @@ function config(): Cfg {
 }
 
 const EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
-const cap = (s: string, n: number) => s.slice(0, n);
-const esc = (s: string) =>
-  s.replace(/[<>&]/g, (c) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;" })[c] as string);
 
-function confirmationHtml(name: string) {
-  return `<!doctype html><html><body style="margin:0;background:#f4f1ea;font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:#2b211a">
-<div style="max-width:520px;margin:0 auto;padding:32px 20px">
-  <div style="background:#ffffff;border:1px solid #e7ded0;border-radius:14px;padding:32px">
-    <div style="font-size:18px;font-weight:700;color:#c96f4a">Syrus</div>
-    <h1 style="font-size:22px;line-height:1.3;margin:20px 0 12px">Thanks, ${esc(name)} — we've got your request.</h1>
-    <p style="font-size:15px;line-height:1.6;color:#5c5044;margin:0 0 14px">
-      We received your request for a Syrus demo and we'll be in touch shortly to set it up.
-    </p>
-    <p style="font-size:15px;line-height:1.6;color:#5c5044;margin:0 0 14px">
-      Syrus lets your team put AI to work across delivery — turning goals into tracked
-      epics and tickets, writing the code, and keeping a developer's review on every
-      change — without giving up the git workflow you already trust.
-    </p>
-    <p style="font-size:15px;line-height:1.6;color:#5c5044;margin:0">
-      If you'd like to add anything, just reply to this email.
-    </p>
-  </div>
-  <p style="font-size:12px;color:#9c8f7d;text-align:center;margin:18px 0 0">
-    Syrus · syrus-ai.dev
-  </p>
-</div></body></html>`;
+// Cap length, trim, and flatten control chars/newlines to spaces — name and
+// company feed the raw email Subject, so nothing header-shaped may survive.
+const clean = (v: unknown, n: number) =>
+  String(v ?? "")
+    .replace(/[\u0000-\u001f\u007f]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+    .slice(0, n);
+
+// Keep newlines in the free-text message (rendered safely by the template),
+// but strip all other control chars.
+const cleanMultiline = (v: unknown, n: number) =>
+  String(v ?? "")
+    .replace(/\r\n?/g, "\n")
+    .replace(/[\u0000-\u0009\u000b-\u001f\u007f]+/g, " ")
+    .trim()
+    .slice(0, n);
+
+// ── Abuse guards (in-memory; resets on container restart, which is fine) ────
+// The endpoint triggers outbound branded mail to an arbitrary address, so it
+// must not be usable to spray mail: 5 requests/hour per IP, and at most one
+// customer confirmation per address per 24 h (the team is still notified).
+const HOUR = 3_600_000;
+const ipHits = new Map<string, number[]>();
+const confirmedRecently = new Map<string, number>();
+
+function rateLimited(ip: string): boolean {
+  const now = Date.now();
+  const hits = (ipHits.get(ip) || []).filter((t) => now - t < HOUR);
+  if (hits.length >= 5) return true;
+  hits.push(now);
+  ipHits.set(ip, hits);
+  if (ipHits.size > 5000) ipHits.clear(); // crude memory cap
+  return false;
+}
+
+function shouldConfirm(email: string): boolean {
+  const now = Date.now();
+  const last = confirmedRecently.get(email);
+  if (last && now - last < 24 * HOUR) return false;
+  confirmedRecently.set(email, now);
+  if (confirmedRecently.size > 5000) confirmedRecently.clear();
+  return true;
 }
 
 export async function POST(req: Request) {
@@ -67,10 +86,19 @@ export async function POST(req: Request) {
   // Honeypot — pretend success so bots don't retry.
   if (body.botcheck) return Response.json({ success: true });
 
-  const name = cap(String(body.name ?? "").trim(), 120);
-  const email = cap(String(body.email ?? "").trim(), 200);
-  const company = cap(String(body.company ?? "").trim(), 160);
-  const message = cap(String(body.message ?? "").trim(), 4000);
+  const ip =
+    req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+  if (rateLimited(ip)) {
+    return Response.json(
+      { error: "Too many requests — please try again later." },
+      { status: 429 },
+    );
+  }
+
+  const name = clean(body.name, 120);
+  const email = clean(body.email, 200);
+  const company = clean(body.company, 160);
+  const message = cleanMultiline(body.message, 4000);
 
   if (!name || !EMAIL_RE.test(email)) {
     return Response.json(
@@ -92,28 +120,37 @@ export async function POST(req: Request) {
     auth: { user: c.user, pass: c.pass },
   });
 
+  const team = teamEmail({
+    name,
+    email,
+    company,
+    message,
+    submittedAt: new Date(),
+  });
+
   try {
     // 1) Notify the team (reply goes straight to the lead).
     await transport.sendMail({
       from: c.from,
       to: c.notify,
       replyTo: email,
-      subject: `New Syrus demo request — ${name}${company ? ` (${company})` : ""}`,
-      text: `New Syrus demo request\n\nName: ${name}\nCompany: ${company || "—"}\nEmail: ${email}\n\n${message || "(no message)"}\n`,
-      html: `<h2 style="font-family:sans-serif">New Syrus demo request</h2>
-<p style="font-family:sans-serif"><b>Name:</b> ${esc(name)}<br><b>Company:</b> ${esc(company) || "—"}<br><b>Email:</b> <a href="mailto:${esc(email)}">${esc(email)}</a></p>
-<p style="font-family:sans-serif;white-space:pre-wrap">${esc(message) || "(no message)"}</p>`,
+      subject: team.subject,
+      text: team.text,
+      html: team.html,
     });
 
-    // 2) Confirm to the customer.
-    await transport.sendMail({
-      from: c.from,
-      to: email,
-      replyTo: c.notify[0] || c.from,
-      subject: "Thanks for your interest in Syrus",
-      text: `Hi ${name},\n\nThanks for reaching out — we've received your request for a Syrus demo and will be in touch shortly to set it up.\n\nIf you'd like to add anything, just reply to this email.\n\n— The Syrus team\nsyrus-ai.dev\n`,
-      html: confirmationHtml(name),
-    });
+    // 2) Confirm to the customer (once per address per 24 h).
+    if (shouldConfirm(email)) {
+      const customer = customerEmail({ name });
+      await transport.sendMail({
+        from: c.from,
+        to: email,
+        replyTo: c.notify[0] || c.from,
+        subject: customer.subject,
+        text: customer.text,
+        html: customer.html,
+      });
+    }
   } catch {
     return Response.json(
       { error: "We couldn't send your request just now. Please try again shortly." },
