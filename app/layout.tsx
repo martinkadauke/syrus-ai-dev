@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Instrument_Serif, JetBrains_Mono } from "next/font/google";
 import { CookieNotice } from "../components/cookie-notice";
+import { MotionProvider } from "../components/motion-provider";
 import "./globals.css";
 
 const inter = Inter({
@@ -43,23 +44,50 @@ export const metadata: Metadata = {
     "Codex",
     "GitHub automation",
   ],
+  alternates: { canonical: "/" },
   openGraph: {
     type: "website",
     url: "https://syrus-ai.dev",
     siteName: "Syrus",
     title: "Syrus — ship more of your roadmap, fully in control",
     description,
+    images: [{ url: "/og.png", width: 1200, height: 630, alt: "Syrus — ship more of your roadmap, fully in control" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Syrus — ship more of your roadmap, fully in control",
     description,
+    images: ["/og.png"],
   },
 };
 
 export const viewport: Viewport = {
-  themeColor: "#14110d",
+  themeColor: "#0b111e",
   colorScheme: "dark",
+};
+
+// Structured data for search engines: who runs this and what the product is.
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://syrus-ai.dev/#org",
+      name: "Syrus",
+      url: "https://syrus-ai.dev",
+      logo: "https://syrus-ai.dev/syrus-icon.png",
+      email: "contact@syrus-ai.dev",
+    },
+    {
+      "@type": "SoftwareApplication",
+      name: "Syrus",
+      url: "https://syrus-ai.dev",
+      applicationCategory: "DeveloperApplication",
+      operatingSystem: "macOS (Apple Silicon), self-hosted server",
+      description,
+      publisher: { "@id": "https://syrus-ai.dev/#org" },
+    },
+  ],
 };
 
 export default function RootLayout({
@@ -76,11 +104,25 @@ export default function RootLayout({
         <script
           dangerouslySetInnerHTML={{
             __html:
-              "try{var t=localStorage.getItem('syrus-theme');if(t)document.documentElement.dataset.theme=t;}catch(e){}",
+              "try{var t=localStorage.getItem('syrus-theme');if(t){document.documentElement.dataset.theme=t;var m=document.querySelector('meta[name=\"theme-color\"]');if(m)m.setAttribute('content',t==='warm'?'#14110d':'#0b111e');}}catch(e){}",
           }}
         />
-        {children}
-        <CookieNotice />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+        <a
+          href="#main"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-[70] focus:rounded-full focus:bg-clay focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-on-accent"
+        >
+          Skip to content
+        </a>
+        <MotionProvider>
+          {/* Notice rendered before the page so keyboard users reach it without
+              tabbing through everything (it's position:fixed — visuals unchanged). */}
+          <CookieNotice />
+          {children}
+        </MotionProvider>
       </body>
     </html>
   );

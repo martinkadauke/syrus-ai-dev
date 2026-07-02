@@ -10,7 +10,7 @@ const cols: { title: string; links: FooterLink[] }[] = [
     links: [
       { label: "How it works", href: "/#how" },
       { label: "Why Syrus", href: "/#features" },
-      { label: "Triggers", href: "/#entry-points" },
+      { label: "Entry points", href: "/#entry-points" },
     ],
   },
   {
@@ -24,7 +24,7 @@ const cols: { title: string; links: FooterLink[] }[] = [
 
 export function Footer() {
   const shortSha = site.build.sha.slice(0, 7);
-  const year = 2026;
+  const year = new Date().getFullYear(); // evaluated at build time (static page)
 
   return (
     <footer className="relative border-t border-white/8 py-14">

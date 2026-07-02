@@ -18,14 +18,6 @@ export function AppleIcon(props: IconProps) {
   );
 }
 
-export function GitHubIcon(props: IconProps) {
-  return (
-    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden {...props}>
-      <path d="M12 1.5A10.5 10.5 0 0 0 1.5 12a10.5 10.5 0 0 0 7.18 9.96c.525.096.716-.228.716-.507 0-.25-.009-.912-.014-1.79-2.92.635-3.536-1.408-3.536-1.408-.478-1.214-1.167-1.537-1.167-1.537-.954-.652.073-.639.073-.639 1.055.074 1.61 1.083 1.61 1.083.938 1.607 2.46 1.143 3.06.874.096-.679.367-1.143.667-1.406-2.33-.265-4.783-1.166-4.783-5.187 0-1.146.41-2.083 1.082-2.817-.109-.266-.469-1.334.103-2.78 0 0 .882-.283 2.89 1.076A10.05 10.05 0 0 1 12 6.32c.894.004 1.795.121 2.636.355 2.006-1.36 2.887-1.076 2.887-1.076.573 1.446.213 2.514.104 2.78.674.734 1.08 1.671 1.08 2.817 0 4.031-2.457 4.919-4.796 5.179.377.325.714.964.714 1.943 0 1.404-.013 2.536-.013 2.881 0 .281.189.608.722.505A10.5 10.5 0 0 0 22.5 12 10.5 10.5 0 0 0 12 1.5Z" />
-    </svg>
-  );
-}
-
 export function ArrowRight(props: IconProps) {
   return (
     <svg viewBox="0 0 24 24" aria-hidden {...base} {...props}>
@@ -53,33 +45,11 @@ export function CheckIcon(props: IconProps) {
 /* Feature-pillar icons ---------------------------------------------------- */
 export function FeatureIcon({ id, ...props }: IconProps & { id: string }) {
   switch (id) {
-    case "context": // </>
-      return (
-        <svg viewBox="0 0 24 24" aria-hidden {...base} {...props}>
-          <path d="m8 8-4 4 4 4M16 8l4 4-4 4M14 4l-4 16" />
-        </svg>
-      );
     case "keys":
       return (
         <svg viewBox="0 0 24 24" aria-hidden {...base} {...props}>
           <circle cx="8" cy="8" r="4" />
           <path d="m10.8 10.8 8.2 8.2M16 16l2.5-2.5M14 18l2.5-2.5" />
-        </svg>
-      );
-    case "audit":
-      return (
-        <svg viewBox="0 0 24 24" aria-hidden {...base} {...props}>
-          <path d="M6 3h9l5 5v13a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z" />
-          <path d="M14 3v5h5M8.5 13l1.8 1.8 3.2-3.3M8.5 18h7" />
-        </svg>
-      );
-    case "github":
-      return (
-        <svg viewBox="0 0 24 24" aria-hidden {...base} {...props}>
-          <circle cx="6" cy="6" r="2.4" />
-          <circle cx="6" cy="18" r="2.4" />
-          <circle cx="18" cy="9" r="2.4" />
-          <path d="M6 8.4v7.2M8.2 7.2A6 6 0 0 0 15.6 10" />
         </svg>
       );
     case "approve":

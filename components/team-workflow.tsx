@@ -31,7 +31,7 @@ export function TeamWorkflow() {
       <div className="wrap">
         <SectionHeader
           eyebrow="How your team works with Syrus"
-          title="You steer it. AI builds it. Your team ships it."
+          title="You steer it. Syrus builds it. Your team ships it."
           subtitle="Every goal turns into tracked epics and tickets, so you always see what's in progress, what's in review, and what shipped — and a developer signs off before anything merges."
         />
 
@@ -44,6 +44,10 @@ export function TeamWorkflow() {
           <span className="inline-flex items-center gap-2">
             <span className="size-2.5 rounded-full clay-gradient" />
             Syrus AI
+          </span>
+          <span className="inline-flex items-center gap-2">
+            <span className="size-2.5 rounded-full bg-clay-bright" />
+            In tandem
           </span>
         </Reveal>
 

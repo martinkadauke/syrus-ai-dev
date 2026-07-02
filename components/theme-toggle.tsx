@@ -19,6 +19,10 @@ export function ThemeToggle() {
 
   function pick(id: string) {
     document.documentElement.dataset.theme = id;
+    // Keep the browser-chrome color in sync with the active theme.
+    document
+      .querySelector('meta[name="theme-color"]')
+      ?.setAttribute("content", id === "warm" ? "#14110d" : "#0b111e");
     try {
       localStorage.setItem(STORAGE_KEY, id);
     } catch {

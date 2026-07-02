@@ -2,7 +2,12 @@ import type { Metadata } from "next";
 import { LegalShell } from "../../components/legal-shell";
 import { legal } from "../../lib/legal";
 
-export const metadata: Metadata = { title: "Privacy Policy" };
+export const metadata: Metadata = {
+  title: "Privacy Policy",
+  description:
+    "How syrus-ai.dev handles personal data: server logs, the demo form, and your GDPR rights. No analytics, no tracking.",
+  alternates: { canonical: "/privacy" },
+};
 
 export default function Privacy() {
   const o = legal.operator;
@@ -33,8 +38,8 @@ export default function Privacy() {
         When you access the site, our server and reverse proxy automatically
         process technical data needed to deliver the pages and keep the service
         secure and stable: your IP address, the date and time of the request, the
-        page or file requested, the referring URL, and your browser/operating-
-        system information.
+        page or file requested, the referring URL, and your
+        browser/operating-system information.
       </p>
       <p>
         <strong>Purpose &amp; legal basis:</strong> operation, security and

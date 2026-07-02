@@ -10,7 +10,7 @@ export function EntryPoints() {
         <SectionHeader
           eyebrow="Six ways in, one execution model"
           title="However work starts, it's tracked the same way."
-          subtitle="A ticket, a review comment, a failing check, a scheduled chore — each becomes the same tracked epic and ticket with a full history, so nothing happens off the books."
+          subtitle="A ticket, a review comment, a failing check, a scheduled chore — each becomes the same tracked job with a full history, so nothing happens off the books."
         />
 
         <RevealGroup

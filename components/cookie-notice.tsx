@@ -20,6 +20,17 @@ export function CookieNotice() {
     }
   }, []);
 
+  // While visible, reserve scroll room so the notice can't cover page-bottom
+  // content (e.g. the footer theme toggle).
+  useEffect(() => {
+    if (!show) return;
+    const prev = document.body.style.paddingBottom;
+    document.body.style.paddingBottom = "110px";
+    return () => {
+      document.body.style.paddingBottom = prev;
+    };
+  }, [show]);
+
   function dismiss() {
     try {
       localStorage.setItem(KEY, "1");
@@ -40,7 +51,11 @@ export function CookieNotice() {
           transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
           className="pointer-events-none fixed inset-x-0 bottom-0 z-[60] px-4 pb-4"
         >
-          <div className="pointer-events-auto mx-auto flex max-w-2xl flex-col gap-3 rounded-xl border border-white/10 bg-[color-mix(in_oklab,var(--color-ink-soft)_90%,transparent)] p-4 shadow-[0_20px_60px_-20px_rgba(0,0,0,0.85)] backdrop-blur-xl sm:flex-row sm:items-center sm:gap-4">
+          <div
+            role="region"
+            aria-label="Cookie notice"
+            className="pointer-events-auto mx-auto flex max-w-2xl flex-col gap-3 rounded-xl border border-white/10 bg-[color-mix(in_oklab,var(--color-ink-soft)_90%,transparent)] p-4 shadow-[0_20px_60px_-20px_rgba(0,0,0,0.85)] backdrop-blur-xl sm:flex-row sm:items-center sm:gap-4"
+          >
             <p className="text-[0.85rem] leading-relaxed text-cream-dim">
               This site uses only essential, first-party browser storage to
               remember your preferences (like your theme). No tracking, no ads,

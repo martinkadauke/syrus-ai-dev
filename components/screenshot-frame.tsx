@@ -58,8 +58,14 @@ const dotColor: Record<string, string> = {
 };
 
 function Placeholder() {
+  // A decorative mock, not real data — present it to AT as a single image.
   return (
-    <div className="flex h-full flex-col bg-gradient-to-b from-[#161009] to-[#120e09]">
+    <div
+      role="img"
+      aria-label="Preview of the Syrus jobs dashboard turning issues into pull requests"
+      className="flex h-full flex-col bg-gradient-to-b from-[#161009] to-[#120e09]"
+    >
+      <div aria-hidden="true" className="contents">
       <div className="flex items-center justify-between border-b border-white/6 px-5 py-3.5">
         <div className="flex items-center gap-2.5">
           <span className="text-[0.9rem] font-semibold text-cream">Jobs</span>
@@ -106,6 +112,7 @@ function Placeholder() {
       <div className="pointer-events-none flex items-center gap-1.5 border-t border-white/6 px-5 py-2.5 font-mono text-[0.65rem] text-cream-faint">
         <span className="size-1.5 rounded-full bg-[#84c78d]" />
         poller healthy · 5 jobs · 2 workers idle
+      </div>
       </div>
     </div>
   );

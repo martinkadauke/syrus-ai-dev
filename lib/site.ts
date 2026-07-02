@@ -7,7 +7,7 @@ export const site = {
   domain: "syrus-ai.dev",
 
   tagline: "Bis dat qui cito dat.",
-  taglineTranslation: "He gives twice who gives quickly.",
+  taglineTranslation: "“He gives twice who gives quickly.”",
   taglineAttribution: "— Publilius Syrus",
 
   // Served from the VM (see app/download/mac + the sync-desktop workflow), not
@@ -41,7 +41,7 @@ export const workflowSteps = [
     who: "ai",
     actor: "Syrus AI",
     action: "Proposes epics & tickets",
-    note: "Breaks the goal into scoped, reviewable issues your team can accept, edit, or reject before any code is written.",
+    note: "Breaks the goal into scoped, reviewable tickets your team can accept, edit, or reject before any code is written.",
   },
   {
     who: "human",
@@ -89,7 +89,7 @@ export const features = [
   {
     id: "keys",
     title: "Stay in control, on your terms",
-    body: "Self-hosted, your keys, your existing git workflow. Nothing leaves your infrastructure and there's no new dashboard to migrate into — Syrus fits the process your team already trusts.",
+    body: "Self-hosted, your keys, your existing git workflow. Your code goes only to the AI model provider you choose — everything else stays on your infrastructure, with no new dashboard to migrate into.",
   },
 ] as const;
 
@@ -98,7 +98,7 @@ export const entryPoints = [
   {
     id: "issue",
     title: "Issue or ticket",
-    body: "A labeled issue becomes a Job, a branch, and a pull request.",
+    body: "A labeled issue becomes a tracked job, a branch, and a pull request.",
   },
   {
     id: "feedback",
@@ -113,7 +113,7 @@ export const entryPoints = [
   {
     id: "direct",
     title: "Direct request",
-    body: "An operator prompt with no ticket — chores, experiments, urgent work.",
+    body: "A direct prompt from your team, no ticket needed — chores, experiments, urgent work.",
   },
   {
     id: "scheduled",
@@ -123,12 +123,12 @@ export const entryPoints = [
   {
     id: "rebase",
     title: "Rebase",
-    body: "An unmergeable branch gets a deterministic rebase — the agent only if judgment is needed.",
+    body: "An unmergeable branch gets a deterministic rebase — the agent steps in only if judgment is needed.",
   },
 ] as const;
 
 export const infraPoints = [
-  "More shipped in every sprint, no new hires",
+  "More shipped each sprint, no new hires",
   "A developer reviews and approves every change",
   "Goals tracked as epics and tickets, end to end",
   "Self-hosted — your keys, your data, your git workflow",

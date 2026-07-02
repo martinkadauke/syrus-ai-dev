@@ -9,7 +9,7 @@ import { site } from "../lib/site";
 const links = [
   { href: "/#how", label: "How it works" },
   { href: "/#features", label: "Why Syrus" },
-  { href: "/#entry-points", label: "Triggers" },
+  { href: "/#entry-points", label: "Entry points" },
 ];
 
 export function Nav() {
@@ -54,7 +54,12 @@ export function Nav() {
                 Request a demo
               </ButtonLink>
             </span>
-            <ButtonLink href={site.macDownload} variant="primary" size="md">
+            <ButtonLink
+              href={site.macDownload}
+              variant="primary"
+              size="md"
+              aria-label="Download Syrus for Mac (Apple Silicon)"
+            >
               <AppleIcon className="size-[18px]" />
               <span className="hidden sm:inline">Download</span>
             </ButtonLink>

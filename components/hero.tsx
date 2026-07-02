@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useReducedMotion } from "motion/react";
+import { motion } from "motion/react";
 import { ButtonLink } from "./button";
 import { ScreenshotFrame } from "./screenshot-frame";
 import { AppleIcon, ArrowRight } from "./icons";
@@ -21,18 +21,16 @@ export function Hero({
   desktopSrc?: string | null;
   mobileSrc?: string | null;
 }) {
-  const reduce = useReducedMotion();
-
+  // Reduced-motion is handled globally by <MotionProvider> — no branching here
+  // (a divergent hydration tree left SSR opacity:0 stuck for those users).
   const container = {
     hidden: {},
     show: { transition: { staggerChildren: 0.12, delayChildren: 0.05 } },
   };
-  const item = reduce
-    ? { hidden: {}, show: {} }
-    : {
-        hidden: { opacity: 0, y: 24 },
-        show: { opacity: 1, y: 0, transition: { duration: 0.75, ease } },
-      };
+  const item = {
+    hidden: { opacity: 0, y: 24 },
+    show: { opacity: 1, y: 0, transition: { duration: 0.75, ease } },
+  };
 
   return (
     <section
@@ -104,6 +102,7 @@ export function Hero({
               variant="primary"
               size="lg"
               className="w-full sm:w-auto"
+              title="macOS on Apple Silicon"
             >
               <AppleIcon className="size-5" />
               Download for Mac
@@ -135,15 +134,15 @@ export function Hero({
         {/* product shot */}
         <motion.div
           data-reveal
-          initial={reduce ? false : { opacity: 0, y: 40, scale: 0.98 }}
-          animate={reduce ? undefined : { opacity: 1, y: 0, scale: 1 }}
+          initial={{ opacity: 0, y: 40, scale: 0.98 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
           transition={{ duration: 0.9, delay: 0.4, ease }}
           className="mx-auto mt-16 max-w-5xl"
         >
           <ScreenshotFrame desktopSrc={desktopSrc} mobileSrc={mobileSrc} />
           <p className="mt-3 text-center font-serif text-[0.95rem] italic text-cream-faint">
             {site.tagline}{" "}
-            <span className="not-italic text-cream-faint/70">
+            <span className="not-italic">
               {site.taglineTranslation} {site.taglineAttribution}
             </span>
           </p>

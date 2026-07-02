@@ -2,7 +2,12 @@ import type { Metadata } from "next";
 import { LegalShell } from "../../components/legal-shell";
 import { legal } from "../../lib/legal";
 
-export const metadata: Metadata = { title: "Impressum" };
+export const metadata: Metadata = {
+  title: "Impressum",
+  description:
+    "Legal notice and operator information for syrus-ai.dev pursuant to § 5 DDG.",
+  alternates: { canonical: "/impressum" },
+};
 
 export default function Impressum() {
   const o = legal.operator;

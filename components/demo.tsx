@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { FormEvent } from "react";
 import { ButtonLink } from "./button";
 import { AppleIcon, ArrowRight, CheckIcon } from "./icons";
@@ -15,6 +15,13 @@ const inputClass =
 export function Demo() {
   const [status, setStatus] = useState<Status>("idle");
   const [error, setError] = useState<string>("");
+  const successRef = useRef<HTMLHeadingElement>(null);
+
+  // On success the form unmounts — move focus to the confirmation so keyboard
+  // and screen-reader users aren't silently dropped to <body>.
+  useEffect(() => {
+    if (status === "success") successRef.current?.focus();
+  }, [status]);
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -95,11 +102,14 @@ export function Demo() {
                   <AppleIcon className="size-5" />
                   Download for Mac
                 </ButtonLink>
-                <ButtonLink href="#how" variant="secondary" size="lg">
+                <ButtonLink href="/#how" variant="secondary" size="lg">
                   See how it works
                   <ArrowRight className="size-4 transition-transform duration-200 group-hover:translate-x-0.5" />
                 </ButtonLink>
               </div>
+              <p className="mt-3 text-[0.78rem] text-cream-faint">
+                macOS · Apple Silicon
+              </p>
 
               <ul className="mt-9 grid gap-3">
                 {infraPoints.map((p) => (
@@ -117,11 +127,18 @@ export function Demo() {
             {/* demo form */}
             <div className="p-8 sm:p-11">
               {status === "success" ? (
-                <div className="flex h-full min-h-[320px] flex-col items-center justify-center text-center">
+                <div
+                  role="status"
+                  className="flex h-full min-h-[320px] flex-col items-center justify-center text-center"
+                >
                   <span className="flex size-14 items-center justify-center rounded-full clay-gradient text-on-accent">
                     <CheckIcon className="size-7" />
                   </span>
-                  <h3 className="mt-5 text-xl font-semibold text-cream">
+                  <h3
+                    ref={successRef}
+                    tabIndex={-1}
+                    className="mt-5 text-xl font-semibold text-cream outline-none"
+                  >
                     Request received
                   </h3>
                   <p className="mt-2 max-w-xs text-[0.92rem] text-cream-dim">
@@ -196,21 +213,23 @@ export function Demo() {
                     />
                   </label>
 
-                  {status === "error" && (
-                    <p className="text-[0.85rem] text-[#f0806a]">{error}</p>
-                  )}
-                  {status === "mailto" && (
-                    <p className="text-[0.85rem] text-cream-dim">
-                      Opening your email client… if nothing happens, email{" "}
-                      <a
-                        className="text-clay underline underline-offset-2"
-                        href={`mailto:${site.contactEmail}`}
-                      >
-                        {site.contactEmail}
-                      </a>
-                      .
-                    </p>
-                  )}
+                  <div role="status" aria-live="polite">
+                    {status === "error" && (
+                      <p className="text-[0.85rem] text-[#f0806a]">{error}</p>
+                    )}
+                    {status === "mailto" && (
+                      <p className="text-[0.85rem] text-cream-dim">
+                        Opening your email client… if nothing happens, email{" "}
+                        <a
+                          className="text-clay underline underline-offset-2"
+                          href={`mailto:${site.contactEmail}`}
+                        >
+                          {site.contactEmail}
+                        </a>
+                        .
+                      </p>
+                    )}
+                  </div>
 
                   <button
                     type="submit"

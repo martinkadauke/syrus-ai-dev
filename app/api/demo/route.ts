@@ -55,24 +55,37 @@ const cleanMultiline = (v: unknown, n: number) =>
 const HOUR = 3_600_000;
 const ipHits = new Map<string, number[]>();
 const confirmedRecently = new Map<string, number>();
+let globalHits: number[] = [];
 
 function rateLimited(ip: string): boolean {
   const now = Date.now();
+  // Global backstop: even with spoofed per-IP keys, total outbound mail stays
+  // bounded (protects the domain's sender reputation).
+  globalHits = globalHits.filter((t) => now - t < HOUR);
+  if (globalHits.length >= 30) return true;
   const hits = (ipHits.get(ip) || []).filter((t) => now - t < HOUR);
   if (hits.length >= 5) return true;
   hits.push(now);
+  globalHits.push(now);
   ipHits.set(ip, hits);
-  if (ipHits.size > 5000) ipHits.clear(); // crude memory cap
+  if (ipHits.size > 5000) {
+    // evict the oldest half rather than dropping all state
+    for (const key of [...ipHits.keys()].slice(0, 2500)) ipHits.delete(key);
+  }
   return false;
 }
 
-function shouldConfirm(email: string): boolean {
-  const now = Date.now();
+function recentlyConfirmed(email: string): boolean {
   const last = confirmedRecently.get(email);
-  if (last && now - last < 24 * HOUR) return false;
-  confirmedRecently.set(email, now);
-  if (confirmedRecently.size > 5000) confirmedRecently.clear();
-  return true;
+  return Boolean(last && Date.now() - last < 24 * HOUR);
+}
+
+function recordConfirmed(email: string): void {
+  confirmedRecently.set(email, Date.now());
+  if (confirmedRecently.size > 5000) {
+    for (const key of [...confirmedRecently.keys()].slice(0, 2500))
+      confirmedRecently.delete(key);
+  }
 }
 
 export async function POST(req: Request) {
@@ -86,8 +99,16 @@ export async function POST(req: Request) {
   // Honeypot — pretend success so bots don't retry.
   if (body.botcheck) return Response.json({ success: true });
 
+  // Use the LAST XFF entry: NPM appends the real client IP to whatever the
+  // client sent, so the first entry is attacker-controlled but the last is the
+  // trusted hop.
   const ip =
-    req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+    req.headers
+      .get("x-forwarded-for")
+      ?.split(",")
+      .map((s) => s.trim())
+      .filter(Boolean)
+      .at(-1) || "unknown";
   if (rateLimited(ip)) {
     return Response.json(
       { error: "Too many requests — please try again later." },
@@ -128,8 +149,9 @@ export async function POST(req: Request) {
     submittedAt: new Date(),
   });
 
+  // 1) Notify the team (reply goes straight to the lead). This is the send
+  //    that matters — if it fails, the request failed.
   try {
-    // 1) Notify the team (reply goes straight to the lead).
     await transport.sendMail({
       from: c.from,
       to: c.notify,
@@ -138,9 +160,20 @@ export async function POST(req: Request) {
       text: team.text,
       html: team.html,
     });
+  } catch {
+    return Response.json(
+      { error: "We couldn't send your request just now. Please try again shortly." },
+      { status: 502 },
+    );
+  }
 
-    // 2) Confirm to the customer (once per address per 24 h).
-    if (shouldConfirm(email)) {
+  // 2) Confirm to the customer (once per address per 24 h). Non-fatal: the
+  //    lead is already with the team, so a failed confirmation must not make
+  //    the client retry (which would notify the team twice). Only record the
+  //    address after a successful send so a failure doesn't suppress the next
+  //    attempt for 24 h.
+  if (!recentlyConfirmed(email)) {
+    try {
       const customer = customerEmail({ name });
       await transport.sendMail({
         from: c.from,
@@ -150,12 +183,10 @@ export async function POST(req: Request) {
         text: customer.text,
         html: customer.html,
       });
+      recordConfirmed(email);
+    } catch {
+      // swallow — team notification succeeded, which is what counts
     }
-  } catch {
-    return Response.json(
-      { error: "We couldn't send your request just now. Please try again shortly." },
-      { status: 502 },
-    );
   }
 
   return Response.json({ success: true });

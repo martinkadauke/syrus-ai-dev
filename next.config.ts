@@ -10,8 +10,8 @@ const csp = [
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob:",
   "font-src 'self' data:",
-  "connect-src 'self' https://api.web3forms.com",
-  "form-action 'self' https://api.web3forms.com",
+  "connect-src 'self'",
+  "form-action 'self'",
   "frame-ancestors 'none'",
   "object-src 'none'",
 ].join("; ");

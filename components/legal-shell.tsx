@@ -14,7 +14,7 @@ export function LegalShell({
   return (
     <>
       <Nav />
-      <main className="wrap max-w-3xl pt-32 pb-24">
+      <main id="main" className="wrap max-w-3xl pt-32 pb-24">
         <a
           href="/"
           className="text-[0.85rem] text-cream-dim transition-colors hover:text-cream"

@@ -1,7 +1,11 @@
 "use client";
 
-import { motion, useReducedMotion } from "motion/react";
+import { motion } from "motion/react";
 import type { ReactNode } from "react";
+
+// Reduced-motion handling lives in <MotionProvider> (MotionConfig
+// reducedMotion="user") — do NOT branch on useReducedMotion() here: rendering
+// a different tree during hydration leaves the SSR opacity:0 styles stuck.
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
@@ -19,8 +23,6 @@ export function Reveal({
   y?: number;
   once?: boolean;
 }) {
-  const reduce = useReducedMotion();
-  if (reduce) return <div className={className}>{children}</div>;
   return (
     <motion.div
       data-reveal
@@ -45,8 +47,6 @@ export function RevealGroup({
   className?: string;
   stagger?: number;
 }) {
-  const reduce = useReducedMotion();
-  if (reduce) return <div className={className}>{children}</div>;
   return (
     <motion.div
       data-reveal
@@ -70,8 +70,6 @@ export function RevealItem({
   className?: string;
   y?: number;
 }) {
-  const reduce = useReducedMotion();
-  if (reduce) return <div className={className}>{children}</div>;
   return (
     <motion.div
       data-reveal
