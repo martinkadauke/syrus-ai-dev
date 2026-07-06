@@ -1,35 +1,23 @@
 import fs from "node:fs";
 import path from "node:path";
 import { Readable } from "node:stream";
+import { artifactFor, DOWNLOADS_DIR } from "../../../lib/downloads";
 
 export const dynamic = "force-dynamic";
 
-// The synced .dmg lives in public/downloads (a read-only volume on the VM,
-// refreshed hourly by .github/workflows/sync-desktop.yml with NEW versioned
-// filenames). We must stream it from this handler rather than redirect to
-// Next's static /downloads/… serving: the standalone server snapshots public/
-// once at boot, so files that appear after container start would 404 there.
-const DIR = path.join(process.cwd(), "public", "downloads");
-
-function latestDmg(): string | null {
-  try {
-    return (
-      fs
-        .readdirSync(DIR)
-        .filter((f) => f.toLowerCase().endsWith(".dmg"))
-        .map((f) => ({ f, m: fs.statSync(path.join(DIR, f)).mtimeMs }))
-        .sort((a, b) => b.m - a.m)[0]?.f ?? null
-    );
-  } catch {
-    return null;
-  }
-}
-
-export async function GET(req: Request) {
-  const file = latestDmg();
-  if (!file) {
+// Streams the current binary for a platform (mac -> .dmg, windows -> .exe) with
+// Range support so 100-200 MB downloads are resumable. We stream rather than
+// redirect to Next's static /downloads serving because the standalone server
+// snapshots public/ once at boot — files synced afterwards would 404 there.
+export async function GET(
+  req: Request,
+  { params }: { params: Promise<{ platform: string }> },
+) {
+  const { platform } = await params;
+  const art = artifactFor(platform);
+  if (!art) {
     return new Response(
-      "The macOS build isn't available yet — please check back shortly.",
+      "This build isn't available yet — please check back shortly.",
       {
         status: 503,
         headers: { "content-type": "text/plain", "cache-control": "no-store" },
@@ -37,23 +25,30 @@ export async function GET(req: Request) {
     );
   }
 
-  const full = path.join(DIR, file);
-  const size = fs.statSync(full).size;
+  const full = path.join(DOWNLOADS_DIR, art.filename);
+  let size: number;
+  try {
+    size = fs.statSync(full).size;
+  } catch {
+    return new Response("Not found.", { status: 404 });
+  }
+
+  const type = art.filename.toLowerCase().endsWith(".dmg")
+    ? "application/x-apple-diskimage"
+    : "application/octet-stream";
   const common: Record<string, string> = {
-    "content-type": "application/x-apple-diskimage",
+    "content-type": type,
     "accept-ranges": "bytes",
-    "content-disposition": `attachment; filename="${file}"`,
+    "content-disposition": `attachment; filename="${art.filename}"`,
     "cache-control": "no-store",
   };
 
-  // Range support so 100 MB+ downloads are resumable.
   const range = req.headers.get("range");
   if (range) {
     const m = /^bytes=(\d*)-(\d*)$/.exec(range.trim());
     let start: number;
     let end: number;
     if (m && m[1] === "" && m[2] !== "") {
-      // suffix range: last N bytes
       const n = Math.min(parseInt(m[2], 10), size);
       start = size - n;
       end = size - 1;

@@ -3,7 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import type { FormEvent } from "react";
 import { ButtonLink } from "./button";
-import { AppleIcon, ArrowRight, CheckIcon } from "./icons";
+import { DownloadCTA } from "./download-cta";
+import { ArrowRight, CheckIcon } from "./icons";
 import { Reveal } from "./reveal";
 import { infraPoints, site } from "../lib/site";
 
@@ -97,19 +98,13 @@ export function Demo() {
                 tickets, AI-written code, and reviewed pull requests, end to end.
               </p>
 
-              <div className="mt-7 flex flex-col gap-3 sm:flex-row">
-                <ButtonLink href={site.macDownload} variant="primary" size="lg">
-                  <AppleIcon className="size-5" />
-                  Download for Mac
-                </ButtonLink>
+              <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:items-start">
+                <DownloadCTA size="lg" />
                 <ButtonLink href="/#how" variant="secondary" size="lg">
                   See how it works
                   <ArrowRight className="size-4 transition-transform duration-200 group-hover:translate-x-0.5" />
                 </ButtonLink>
               </div>
-              <p className="mt-3 text-[0.78rem] text-cream-faint">
-                macOS · Apple Silicon
-              </p>
 
               <ul className="mt-9 grid gap-3">
                 {infraPoints.map((p) => (

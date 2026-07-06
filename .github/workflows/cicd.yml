@@ -129,6 +129,9 @@ jobs:
             echo "::warning::No previous good SHA to roll back to (first deploy) — the site may be down."
           fi
 
-      - name: Prune dangling images
+      - name: Prune old images
+        # -af (not just dangling): the VM disk is small, so remove every image
+        # not used by the running container. A future rollback re-pulls its
+        # target from GHCR, so this is safe.
         if: always()
-        run: docker image prune -f || true
+        run: docker image prune -af || true

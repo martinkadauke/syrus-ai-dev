@@ -17,12 +17,14 @@
   --color-cocoa: #2b211a;
   --color-cocoa-dim: #6b5c4c;
 
-  --color-clay: #c96f4a;
-  --color-clay-bright: #e28a5c;
-  --color-clay-deep: #a6542f;
+  /* Product terracotta (the winged-stylus mark — #b6492e at 600), tuned so the
+     accent stays legible on the dark warm ground. Matches the Syrus app brand. */
+  --color-clay: #cd7a5c;
+  --color-clay-bright: #dba28b;
+  --color-clay-deep: #b6492e;
 
   /* text color that sits on top of the accent (buttons, filled nodes) */
-  --color-on-accent: #231208;
+  --color-on-accent: #361208;
 
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system,
     "Segoe UI", sans-serif;
@@ -33,36 +35,11 @@
 /* ── Base ───────────────────────────────────────────────────────────────── */
 :root {
   color-scheme: dark;
-  /* Themeable props that aren't color-utility tokens (warm defaults). */
-  --aurora-a: rgba(201, 111, 74, 0.55);
-  --aurora-b: rgba(226, 138, 92, 0.28);
-  --aurora-c: rgba(166, 84, 47, 0.3);
-  --accent-shadow: rgba(201, 111, 74, 0.7);
-}
-
-/* ── Cool "app" theme ─────────────────────────────────────────────────────
-   Navy + blue palette matching the product screenshots. This is the default;
-   the footer toggle flips back to the warm terracotta scheme. Higher specificity
-   than :root so it reliably overrides the @theme tokens. */
-html[data-theme="cool"] {
-  --color-ink: #0b111e;
-  --color-ink-soft: #121b2e;
-  --color-ink-2: #1b2742;
-
-  --color-cream: #e9eef8;
-  --color-cream-dim: #9aa7bf;
-  --color-cream-faint: #828fa8;
-
-  --color-clay: #5b95f7;
-  --color-clay-bright: #7aa8ff;
-  --color-clay-deep: #4483f4;
-
-  --color-on-accent: #071426;
-
-  --aurora-a: rgba(91, 149, 247, 0.5);
-  --aurora-b: rgba(122, 168, 255, 0.28);
-  --aurora-c: rgba(68, 131, 244, 0.32);
-  --accent-shadow: rgba(91, 149, 247, 0.6);
+  /* Terracotta glow + button-shadow tints. */
+  --aurora-a: rgba(192, 92, 63, 0.5);
+  --aurora-b: rgba(219, 162, 139, 0.26);
+  --aurora-c: rgba(151, 59, 37, 0.32);
+  --accent-shadow: rgba(182, 73, 46, 0.58);
 }
 
 * {

@@ -3,8 +3,7 @@
 import { useEffect, useState } from "react";
 import { Logo } from "./logo";
 import { ButtonLink } from "./button";
-import { AppleIcon } from "./icons";
-import { site } from "../lib/site";
+import { DownloadButton } from "./download-cta";
 
 const links = [
   { href: "/#how", label: "How it works" },
@@ -54,15 +53,7 @@ export function Nav() {
                 Request a demo
               </ButtonLink>
             </span>
-            <ButtonLink
-              href={site.macDownload}
-              variant="primary"
-              size="md"
-              aria-label="Download Syrus for Mac (Apple Silicon)"
-            >
-              <AppleIcon className="size-[18px]" />
-              <span className="hidden sm:inline">Download</span>
-            </ButtonLink>
+            <DownloadButton />
           </div>
         </nav>
       </div>

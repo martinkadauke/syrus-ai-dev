@@ -1,5 +1,4 @@
 import { Logo } from "./logo";
-import { ThemeToggle } from "./theme-toggle";
 import { site } from "../lib/site";
 
 type FooterLink = { label: string; href: string; external?: boolean };
@@ -16,7 +15,7 @@ const cols: { title: string; links: FooterLink[] }[] = [
   {
     title: "Get started",
     links: [
-      { label: "Download for Mac", href: site.macDownload },
+      { label: "Download", href: "/download" },
       { label: "Request a demo", href: "/#demo" },
     ],
   },
@@ -78,10 +77,6 @@ export function Footer() {
           <span className="font-mono text-[0.72rem] text-cream-faint">
             build {shortSha}
           </span>
-        </div>
-
-        <div className="mt-8 flex justify-center">
-          <ThemeToggle />
         </div>
       </div>
     </footer>

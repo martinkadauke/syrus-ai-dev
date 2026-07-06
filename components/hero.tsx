@@ -2,8 +2,9 @@
 
 import { motion } from "motion/react";
 import { ButtonLink } from "./button";
+import { DownloadCTA } from "./download-cta";
 import { ScreenshotFrame } from "./screenshot-frame";
-import { AppleIcon, ArrowRight } from "./icons";
+import { ArrowRight } from "./icons";
 import { hero, site } from "../lib/site";
 
 const ease = [0.22, 1, 0.36, 1] as const;
@@ -95,20 +96,11 @@ export function Hero({
 
           <motion.div
             variants={item}
-            className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row"
+            className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row sm:items-start"
           >
+            <DownloadCTA size="lg" />
             <ButtonLink
-              href={site.macDownload}
-              variant="primary"
-              size="lg"
-              className="w-full sm:w-auto"
-              title="macOS on Apple Silicon"
-            >
-              <AppleIcon className="size-5" />
-              Download for Mac
-            </ButtonLink>
-            <ButtonLink
-              href="#demo"
+              href="/#demo"
               variant="secondary"
               size="lg"
               className="w-full sm:w-auto"

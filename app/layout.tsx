@@ -62,7 +62,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0b111e",
+  themeColor: "#14110d",
   colorScheme: "dark",
 };
 
@@ -96,17 +96,9 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      data-theme="cool"
-      suppressHydrationWarning
       className={`${inter.variable} ${instrumentSerif.variable} ${jetbrainsMono.variable}`}
     >
       <body>
-        <script
-          dangerouslySetInnerHTML={{
-            __html:
-              "try{var t=localStorage.getItem('syrus-theme');if(t){document.documentElement.dataset.theme=t;var m=document.querySelector('meta[name=\"theme-color\"]');if(m)m.setAttribute('content',t==='warm'?'#14110d':'#0b111e');}}catch(e){}",
-          }}
-        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
