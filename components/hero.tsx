@@ -11,8 +11,8 @@ const ease = [0.22, 1, 0.36, 1] as const;
 
 const chips = [
   "More shipped per sprint",
-  "Every feature human-approved",
-  "Epics & tickets, fully tracked",
+  "Human review on every merge",
+  "Epics, tickets & cost, fully tracked",
 ];
 
 export function Hero({

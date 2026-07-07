@@ -93,9 +93,15 @@ export function Demo() {
                 <span className="clay-text">your roadmap.</span>
               </h2>
               <p className="mt-4 text-[1rem] leading-relaxed text-cream-dim">
-                Download the Mac app to drive Syrus from your desktop, or request
-                a guided demo — we&apos;ll show you how goals become tracked
-                tickets, AI-written code, and reviewed pull requests, end to end.
+                Download the desktop app — it sets up a complete local Syrus
+                (Docker included) or connects to your team&apos;s instance. Or
+                request a guided demo and we&apos;ll show you how goals become
+                tracked tickets, AI-written code, and reviewed pull requests,
+                end to end.
+              </p>
+              <p className="mt-3 text-[0.9rem] text-cream-faint">
+                Syrus is built with Syrus — every feature ships through its own
+                pipeline.
               </p>
 
               <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:items-start">

@@ -75,9 +75,10 @@ export default function DownloadPage() {
           Download Syrus
         </h1>
         <p className="mt-4 text-pretty text-[1.02rem] leading-relaxed text-cream-dim">
-          The Syrus desktop app for macOS and Windows. The macOS build is
-          universal — one download runs natively on both Apple&nbsp;Silicon and
-          Intel Macs.
+          The Syrus desktop app for macOS and Windows — it sets up a complete
+          local Syrus (Docker included) or connects to your team&apos;s
+          instance. The macOS build is universal: one download runs natively on
+          both Apple&nbsp;Silicon and Intel Macs.
         </p>
 
         {artifacts.length ? (
@@ -93,7 +94,12 @@ export default function DownloadPage() {
           </div>
         )}
 
-        <p className="mt-8 text-[0.85rem] text-cream-faint">
+        <p className="mt-6 text-[0.85rem] text-cream-faint">
+          The Windows build is in beta and not yet code-signed — expect a
+          SmartScreen prompt on first run. Prefer the terminal? Syrus also
+          ships a CLI for macOS and Linux.
+        </p>
+        <p className="mt-4 text-[0.85rem] text-cream-faint">
           By downloading, you agree to run Syrus on infrastructure you control.
           See our{" "}
           <a

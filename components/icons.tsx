@@ -90,6 +90,22 @@ export function FeatureIcon({ id, ...props }: IconProps & { id: string }) {
           <circle cx="12" cy="12" r="2.6" />
         </svg>
       );
+    case "landing": // approve → it lands itself (git-merge)
+      return (
+        <svg viewBox="0 0 24 24" aria-hidden {...base} {...props}>
+          <circle cx="6" cy="5.5" r="2.4" />
+          <circle cx="6" cy="18.5" r="2.4" />
+          <circle cx="18.5" cy="12" r="2.4" />
+          <path d="M6 7.9v8.2M6 7.9c0 4.1 4.2 4.1 10 4.1" />
+        </svg>
+      );
+    case "cost": // know what every feature cost
+      return (
+        <svg viewBox="0 0 24 24" aria-hidden {...base} {...props}>
+          <path d="M4 20.5h16M7 20.5v-6M12 20.5V10M17 20.5v-9" />
+          <circle cx="17" cy="5.5" r="2.2" />
+        </svg>
+      );
     default:
       return null;
   }

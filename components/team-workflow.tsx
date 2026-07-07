@@ -32,7 +32,7 @@ export function TeamWorkflow() {
         <SectionHeader
           eyebrow="How your team works with Syrus"
           title="You steer it. Syrus builds it. Your team ships it."
-          subtitle="Every goal turns into tracked epics and tickets, so you always see what's in progress, what's in review, and what shipped — and a developer signs off before anything merges."
+          subtitle="Every goal turns into tracked epics and tickets, so you always see what's in progress, what's in review, and what shipped — and someone on your team signs off before anything merges, per the review policy you set."
         />
 
         {/* legend */}

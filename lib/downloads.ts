@@ -66,7 +66,7 @@ export function listArtifacts(): Artifact[] {
     out.push({
       id,
       osLabel: isMac ? "macOS" : "Windows",
-      archLabel: isMac ? "Apple Silicon & Intel" : "64-bit (x64)",
+      archLabel: isMac ? "Apple Silicon & Intel" : "64-bit (x64) · beta",
       filename: f,
       size,
       version: f.match(VERSION_RE)?.[1] ?? null,

@@ -25,7 +25,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 const description =
-  "Syrus lets product, project, and application owners put AI to work across delivery — goals become tracked epics and tickets, AI does the heavy lifting, and a developer reviews every change. You ship more each sprint, with full visibility and no loss of control.";
+  "Syrus lets product, project, and application owners put AI to work from goal to merged pull request — conversations become tracked epics and tickets, AI does the heavy lifting, and a human review gates every merge. You ship more each sprint, with full visibility into what's built and what it cost.";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://syrus-ai.dev"),
@@ -83,7 +83,8 @@ const jsonLd = {
       name: "Syrus",
       url: "https://syrus-ai.dev",
       applicationCategory: "DeveloperApplication",
-      operatingSystem: "macOS (Apple Silicon), self-hosted server",
+      operatingSystem:
+        "macOS (universal: Apple Silicon & Intel), Windows (beta), self-hosted server (Docker/Kubernetes)",
       description,
       publisher: { "@id": "https://syrus-ai.dev/#org" },
     },

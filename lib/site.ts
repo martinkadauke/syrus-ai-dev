@@ -23,7 +23,7 @@ export const hero = {
   titleLead: "Ship more of your roadmap.",
   titleAccent: "Without losing sight of a thing.",
   subtitle:
-    "Syrus lets product, project, and application owners put AI to work across delivery — turning your goals into tracked epics and tickets, letting AI do the heavy lifting, and keeping a developer's review on every change. You ship more each sprint, you see exactly what's being built, and the guardrails keep AI's speed from becoming AI's mess.",
+    "Syrus lets product, project, and application owners put AI to work from goal to merged pull request — turning conversations into tracked epics and tickets, running many changes on your codebase at once, and keeping a human review on every merge. You ship more each sprint, you see exactly what's being built and what it cost, and the guardrails keep AI's speed from becoming AI's mess.",
 } as const;
 
 // The human + AI team workflow — who does what, start to finish.
@@ -32,37 +32,37 @@ export const workflowSteps = [
     who: "human",
     actor: "Leads & PMs",
     action: "Set the goal",
-    note: "Describe the outcome you want in plain language — a feature, a fix, a refactor. No prompt engineering required.",
+    note: "Describe the outcome in a Syrus chat — a feature, a refactor, a whole initiative. Syrus reads your repositories and drafts the plan. Nothing becomes work until you confirm it.",
   },
   {
     who: "ai",
     actor: "Syrus AI",
     action: "Proposes epics & tickets",
-    note: "Breaks the goal into scoped, reviewable tickets your team can accept, edit, or reject before any code is written.",
+    note: "Big goals become epics: dependency-ordered stacks of scoped tickets — “Jobs”, in Syrus — that your team can accept, edit, or reject before any code is written.",
   },
   {
     who: "human",
     actor: "Developers",
-    action: "Pick up a ticket",
-    note: "Assign it to Syrus with a trigger label — right inside the issue tracker your team already works in.",
+    action: "Green-light the work",
+    note: "A developer releases the plan for execution — or triggers Syrus directly with a label on a GitHub issue, right where your code already lives.",
   },
   {
     who: "ai",
     actor: "Syrus AI",
     action: "Writes the code",
-    note: "Clones, branches, and implements in an isolated workspace, then opens a pull request with the full diff and transcript.",
+    note: "Clones, branches, and implements in an isolated workspace — many changes in flight at once, even on the same files — then opens a pull request with the diff and a step-by-step test plan. The full transcript stays on the job record.",
   },
   {
     who: "both",
     actor: "Syrus AI + developer",
     action: "Review in tandem",
-    note: "Syrus critiques its own diff and answers review comments; your developer brings the judgment machines can't.",
+    note: "Your own checks — tests, lint, typecheck — grade every change, and a red result sends the agent back before the PR even opens. Syrus answers review comments; your developer brings the judgment machines can't.",
   },
   {
     who: "human",
     actor: "Developers",
     action: "Ship world-class code",
-    note: "Only human-approved work gets merged. Your reviews, your branch protection, your standards — never bypassed.",
+    note: "Human approval gates the merge — self-review, two-person, or a designated final say: your policy. Once approved, Syrus lands it for you — rebased, re-checked on the exact branch, merged in dependency order. Branch protection, never bypassed.",
   },
 ] as const;
 
@@ -71,22 +71,32 @@ export const features = [
   {
     id: "leverage",
     title: "Multiply your output",
-    body: "Turn your roadmap into work AI can execute end to end. Your people move from typing code to directing and reviewing it — so you ship more each sprint, without burning out or hiring up.",
+    body: "Run many changes on one codebase at once — even changes that touch the same files. Every job works in its own isolated workspace, in-flight branches are rebased against each other automatically, and ordered work ships as stacked pull requests that land in sequence.",
   },
   {
     id: "approve",
     title: "AI speed, without the AI mess",
-    body: "Every change runs through your real code review and branch protection. Nothing merges until a developer signs off — so AI's velocity never turns into hallucinated logic or low-quality features slipping into production.",
+    body: "Your own checks — tests, lint, typecheck — grade every change, and a red result sends the agent back to fix it before a PR ever opens. Then human approval gates the merge, per the review policy you set. AI's velocity never turns into hallucinated logic slipping into production.",
+  },
+  {
+    id: "landing",
+    title: "Approve it — it lands itself",
+    body: "After sign-off, the landing queue takes over: rebase, re-run your checks on the exact branch about to merge, then merge in dependency order. Epics land as one green unit or not at all — no half-merged features on your main branch.",
   },
   {
     id: "visibility",
     title: "See exactly what's being built",
-    body: "Goals become tracked epics and tickets, and every run keeps its plan, diff, and review. You can follow what development is doing — and understand what each new feature actually is — without reading a line of code.",
+    body: "Goals become tracked epics and tickets, and every attempt keeps its full transcript, diff, and review — an append-only record of who asked for what and exactly what the agent did. One inbox surfaces what needs you: work to approve, feedback to read, failures to retry.",
+  },
+  {
+    id: "cost",
+    title: "Know what every feature cost",
+    body: "Every run records what it spent. A spending dashboard breaks AI cost down by epic, person, and repository — so you know what each feature actually cost to build, not just that it shipped.",
   },
   {
     id: "keys",
     title: "Stay in control, on your terms",
-    body: "Self-hosted, your keys, your existing git workflow. Your code goes only to the AI model provider you choose — everything else stays on your infrastructure, with no new dashboard to migrate into.",
+    body: "Self-hosted on your infrastructure, and your code goes only to the model provider you choose — Claude or Codex, on your own credentials. Syrus only ever calls out: no inbound webhooks, no public endpoint to expose. Your issues, reviews, and merges stay in GitHub.",
   },
 ] as const;
 
@@ -100,7 +110,7 @@ export const entryPoints = [
   {
     id: "feedback",
     title: "PR feedback",
-    body: "A review comment triggers a follow-up commit on the same branch.",
+    body: "Your review comment triggers a follow-up commit on the same branch; teammates' comments queue for one-click apply.",
   },
   {
     id: "ci",
@@ -109,8 +119,8 @@ export const entryPoints = [
   },
   {
     id: "direct",
-    title: "Direct request",
-    body: "A direct prompt from your team, no ticket needed — chores, experiments, urgent work.",
+    title: "Chat or direct prompt",
+    body: "A confirmed chat proposal or a direct prompt from your team, no ticket needed — chores, experiments, urgent work.",
   },
   {
     id: "scheduled",
@@ -126,7 +136,7 @@ export const entryPoints = [
 
 export const infraPoints = [
   "More shipped each sprint, no new hires",
-  "A developer reviews and approves every change",
-  "Goals tracked as epics and tickets, end to end",
-  "Self-hosted — your keys, your data, your git workflow",
+  "Human review and approval on every change — your policy",
+  "Full transcript, diff, and cost record for every run",
+  "Self-hosted — one-command Docker install, Kubernetes when you scale",
 ] as const;

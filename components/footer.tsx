@@ -32,8 +32,8 @@ export function Footer() {
           <div className="lg:col-span-2">
             <Logo />
             <p className="mt-4 max-w-xs text-[0.9rem] leading-relaxed text-cream-dim">
-              AI across your delivery pipeline — with your git workflow, your
-              reviews, and your final say kept fully intact.
+              From written intent to reviewed pull requests — with your git
+              workflow, your reviews, and your final say kept fully intact.
             </p>
             <p className="mt-4 font-serif text-[0.92rem] italic text-cream-faint">
               {site.tagline}
