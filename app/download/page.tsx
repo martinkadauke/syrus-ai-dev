@@ -23,23 +23,24 @@ function PlatformIcon({ id }: { id: Artifact["id"] }) {
 }
 
 function Card({ art }: { art: Artifact }) {
+  // flex-wrap: on mobile the icon + text share the first row and the
+  // full-width button wraps below; on sm+ everything sits on one row.
+  // The SHA uses break-all (never nowrap) so its min-content width can't
+  // blow the card out past narrow viewports.
   return (
-    <article className="card flex flex-col gap-5 p-6 sm:flex-row sm:items-center">
-      <span className="flex size-14 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/[0.03]">
+    <article className="card flex min-w-0 flex-wrap items-start gap-4 p-5 sm:flex-nowrap sm:items-center sm:gap-5 sm:p-6">
+      <span className="flex size-12 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/[0.03] sm:size-14">
         <PlatformIcon id={art.id} />
       </span>
 
-      <div className="min-w-0 flex-1">
+      <div className="min-w-0 flex-1 basis-0">
         <h2 className="text-lg font-semibold text-cream">{art.osLabel}</h2>
         <p className="mt-0.5 text-[0.9rem] text-cream-dim">
           {art.archLabel}
           {art.version ? ` · v${art.version}` : ""} · {humanSize(art.size)}
         </p>
         {art.sha256 ? (
-          <p
-            className="mt-2 truncate font-mono text-[0.68rem] text-cream-faint"
-            title={art.sha256}
-          >
+          <p className="mt-1.5 break-all font-mono text-[0.65rem] leading-relaxed text-cream-faint">
             SHA-256 {art.sha256}
           </p>
         ) : null}
