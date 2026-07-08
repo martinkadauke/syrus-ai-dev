@@ -29,6 +29,19 @@ function sha256For(file: string): string | null {
   }
 }
 
+// The binaries carry canonical, version-less names (Syrus.dmg / Syrus-Setup.exe
+// — exactly as the release publishes them), so the version can't be read from
+// the filename. A plain VERSION file dropped alongside them on the VM carries
+// it instead. A version embedded in a filename still wins if one is present.
+function versionFromFile(): string | null {
+  try {
+    const raw = fs.readFileSync(path.join(DOWNLOADS_DIR, "VERSION"), "utf8");
+    return raw.match(VERSION_RE)?.[1] ?? null;
+  } catch {
+    return null;
+  }
+}
+
 export function listArtifacts(): Artifact[] {
   let entries: string[] = [];
   try {
@@ -50,6 +63,7 @@ export function listArtifacts(): Artifact[] {
     .sort((a, b) => b.m - a.m)
     .map((x) => x.f);
 
+  const fallbackVersion = versionFromFile();
   const seen = new Set<Platform>();
   const out: Artifact[] = [];
   for (const f of candidates) {
@@ -69,7 +83,7 @@ export function listArtifacts(): Artifact[] {
       archLabel: isMac ? "Apple Silicon & Intel" : "64-bit (x64) · beta",
       filename: f,
       size,
-      version: f.match(VERSION_RE)?.[1] ?? null,
+      version: f.match(VERSION_RE)?.[1] ?? fallbackVersion,
       sha256: sha256For(f),
     });
   }
