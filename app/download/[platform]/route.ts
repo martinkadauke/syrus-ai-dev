@@ -33,13 +33,18 @@ export async function GET(
     return new Response("Not found.", { status: 404 });
   }
 
-  const type = art.filename.toLowerCase().endsWith(".dmg")
+  // The file on disk is versioned (so the page can show v0.1.3), but we hand it
+  // to the browser under the stable product name — the same version-less names
+  // the release publishes: Syrus.dmg for macOS, Syrus-Setup.exe for Windows.
+  const isDmg = art.filename.toLowerCase().endsWith(".dmg");
+  const type = isDmg
     ? "application/x-apple-diskimage"
     : "application/octet-stream";
+  const downloadName = isDmg ? "Syrus.dmg" : "Syrus-Setup.exe";
   const common: Record<string, string> = {
     "content-type": type,
     "accept-ranges": "bytes",
-    "content-disposition": `attachment; filename="${art.filename}"`,
+    "content-disposition": `attachment; filename="${downloadName}"`,
     "cache-control": "no-store",
   };
 
