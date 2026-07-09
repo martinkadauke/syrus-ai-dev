@@ -4,6 +4,38 @@ import { customerEmail, teamEmail } from "../../../lib/email-templates";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
+// ── CORS ────────────────────────────────────────────────────────────────────
+// The marketing site is now static on GitHub Pages (syrus-ai.dev) while this
+// endpoint stays on the VM (reachable at api.syrus-ai.dev), so the form posts
+// here cross-origin. Allow only the site's own origins; same-origin callers
+// send no Origin header and are unaffected. Configurable via DEMO_CORS_ORIGINS.
+const ALLOWED_ORIGINS = new Set(
+  (process.env.DEMO_CORS_ORIGINS ||
+    "https://syrus-ai.dev,https://www.syrus-ai.dev")
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean),
+);
+
+function corsHeaders(origin: string | null): Record<string, string> {
+  const h: Record<string, string> = { Vary: "Origin" };
+  if (origin && ALLOWED_ORIGINS.has(origin)) {
+    h["Access-Control-Allow-Origin"] = origin;
+    h["Access-Control-Allow-Methods"] = "POST, OPTIONS";
+    h["Access-Control-Allow-Headers"] = "Content-Type";
+    h["Access-Control-Max-Age"] = "86400";
+  }
+  return h;
+}
+
+// Preflight for the cross-origin JSON POST.
+export function OPTIONS(req: Request) {
+  return new Response(null, {
+    status: 204,
+    headers: corsHeaders(req.headers.get("origin")),
+  });
+}
+
 type Cfg = {
   host?: string;
   port: number;
@@ -89,15 +121,20 @@ function recordConfirmed(email: string): void {
 }
 
 export async function POST(req: Request) {
+  // Attach CORS headers to every response (the static site posts cross-origin).
+  const cors = corsHeaders(req.headers.get("origin"));
+  const reply = (data: unknown, status = 200) =>
+    Response.json(data, { status, headers: cors });
+
   let body: Record<string, unknown>;
   try {
     body = await req.json();
   } catch {
-    return Response.json({ error: "Invalid request." }, { status: 400 });
+    return reply({ error: "Invalid request." }, 400);
   }
 
   // Honeypot — pretend success so bots don't retry.
-  if (body.botcheck) return Response.json({ success: true });
+  if (body.botcheck) return reply({ success: true });
 
   // Use the LAST XFF entry: NPM appends the real client IP to whatever the
   // client sent, so the first entry is attacker-controlled but the last is the
@@ -110,10 +147,7 @@ export async function POST(req: Request) {
       .filter(Boolean)
       .at(-1) || "unknown";
   if (rateLimited(ip)) {
-    return Response.json(
-      { error: "Too many requests — please try again later." },
-      { status: 429 },
-    );
+    return reply({ error: "Too many requests — please try again later." }, 429);
   }
 
   const name = clean(body.name, 120);
@@ -122,16 +156,16 @@ export async function POST(req: Request) {
   const message = cleanMultiline(body.message, 4000);
 
   if (!name || !EMAIL_RE.test(email)) {
-    return Response.json(
+    return reply(
       { error: "Please provide your name and a valid email address." },
-      { status: 422 },
+      422,
     );
   }
 
   const c = config();
   if (!c.host || !c.user || !c.pass || c.notify.length === 0) {
     // Not configured yet — the client falls back to a mailto.
-    return Response.json({ error: "not-configured" }, { status: 503 });
+    return reply({ error: "not-configured" }, 503);
   }
 
   const transport = nodemailer.createTransport({
@@ -161,9 +195,9 @@ export async function POST(req: Request) {
       html: team.html,
     });
   } catch {
-    return Response.json(
+    return reply(
       { error: "We couldn't send your request just now. Please try again shortly." },
-      { status: 502 },
+      502,
     );
   }
 
@@ -189,5 +223,5 @@ export async function POST(req: Request) {
     }
   }
 
-  return Response.json({ success: true });
+  return reply({ success: true });
 }
